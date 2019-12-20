@@ -1486,6 +1486,7 @@ class Handler implements HandlerOptions {
      * @param {(canvas: FabricCanvas) => void} [callback]
      */
     public importJSON = (json: any, callback?: (canvas: FabricCanvas) => void) => {
+        console.log(json);
         if (typeof json === 'string') {
             json = JSON.parse(json);
         }
