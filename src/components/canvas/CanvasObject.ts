@@ -44,6 +44,9 @@ const CanvasObject: CanvasObjectSchema = {
     rect: {
         create: (option: any) => new fabric.Rect(option),
     },
+    path: {
+        create: (option: any) => new fabric.Path(option),
+    },
     image: {
         create: ({ element = new Image(), ...option }) => new fabric.Image(element, {
             ...option,

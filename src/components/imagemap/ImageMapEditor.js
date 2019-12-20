@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Badge, Button, Popconfirm, Menu } from 'antd';
 import debounce from 'lodash/debounce';
 import i18n from 'i18next';
+import uuid from 'uuid/v4';
 
 import ImageMapFooterToolbar from './ImageMapFooterToolbar';
 import ImageMapItems from './ImageMapItems';
@@ -470,7 +471,8 @@ class ImageMapEditor extends Component {
                             this.canvasRef.handler.clear(true);
                             const data = objects.filter((obj) => {
                                 if (!obj.id) {
-                                    return false;
+                                    obj.id = uuid()
+                                    // return false;
                                 }
                                 return true;
                             });
@@ -480,7 +482,8 @@ class ImageMapEditor extends Component {
                     reader.onloadend = () => {
                         this.showLoading(false);
                     };
-                    reader.onerror = () => {
+                    reader.onerror = (e) => {
+                        alert(JSON.stringify(e));
                         this.showLoading(false);
                     };
                     reader.readAsText(files[0]);
@@ -685,7 +688,7 @@ class ImageMapEditor extends Component {
                     >
                         <Canvas
                             ref={(c) => { this.canvasRef = c; }}
-                            minZoom={30}
+                            minZoom={1}
                             defaultOption={defaultOption}
                             propertiesToInclude={propertiesToInclude}
                             onModified={onModified}

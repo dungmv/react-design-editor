@@ -27,8 +27,8 @@ class Container extends Component {
                         style={{
                             overflowY: 'auto',
                             overflowX: 'hidden',
-                            minHeight: 'calc(100vh - 98px)',
-                            height: 'calc(100vh - 98px)',
+                            minHeight: 'calc(100vh - 38px)',
+                            height: 'calc(100vh - 38px)',
                         }}
                         className={className}
                     >

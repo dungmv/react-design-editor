@@ -59,8 +59,8 @@ class Canvas extends Component<CanvasProps> {
         },
         tooltip: null,
         zoomEnabled: true,
-        minZoom: 30,
-        maxZoom: 300,
+        minZoom: 1,
+        maxZoom: 3000,
         propertiesToInclude: defaultPropertiesToInclude,
         workareaOption: {},
         gridOption: {
