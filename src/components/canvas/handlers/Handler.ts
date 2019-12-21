@@ -1486,7 +1486,6 @@ class Handler implements HandlerOptions {
      * @param {(canvas: FabricCanvas) => void} [callback]
      */
     public importJSON = (json: any, callback?: (canvas: FabricCanvas) => void) => {
-        console.log(json);
         if (typeof json === 'string') {
             json = JSON.parse(json);
         }
@@ -1535,8 +1534,17 @@ class Handler implements HandlerOptions {
                 if (obj.superType === 'element') {
                     obj.id = uuid();
                 }
-                this.add(obj, false, true);
-                this.canvas.renderAll();
+                if (obj.clipPath) {
+                    const self = this;
+                    fabric.util.enlivenObjects([obj.clipPath], function(enlivedProps: Array<fabric.Object>) {
+                        obj.clipPath = enlivedProps[0];
+                        self.add(obj, false, true);
+                        self.canvas.renderAll();
+                    }, null);
+                } else {
+                    this.add(obj, false, true);
+                    this.canvas.renderAll();
+                }
             });
             if (callback) {
                 callback(this.canvas);
