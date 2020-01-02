@@ -461,7 +461,11 @@ class ImageMapEditor extends Component {
                         }
                     };
                     reader.onload = (e) => {
-                        const { objects, animations, styles, dataSources } = JSON.parse(e.target.result);
+                        let json = JSON.parse(e.target.result);
+                        if (Array.isArray(json)) {
+                            json = json[0];
+                        }
+                        const { objects, animations, styles, dataSources } = json;
                         this.setState({
                             animations,
                             styles,

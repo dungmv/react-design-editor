@@ -1272,7 +1272,7 @@ class Handler implements HandlerOptions {
             obj.setElement(source);
             obj.setCoords();
             this.canvas.renderAll();
-        });
+        }); //, null, 'use-credentials'
     }
 
     /**
