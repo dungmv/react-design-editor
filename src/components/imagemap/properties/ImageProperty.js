@@ -11,7 +11,7 @@ export default {
         if (!data) {
             return null;
         }
-        const imageLoadType = data.imageLoadType || 'file';
+        const imageLoadType = data.imageLoadType || 'src';
         return (
             <React.Fragment>
                 <Form.Item label={i18n.t('imagemap.image.image-load-type')} colon={false}>

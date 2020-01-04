@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Badge, Button, Popconfirm, Menu } from 'antd';
+import { Badge, Button, Popconfirm, Menu, Form, Modal, Input } from 'antd';
 import debounce from 'lodash/debounce';
 import i18n from 'i18next';
 import uuid from 'uuid/v4';
+import axios from 'axios';
 
 import ImageMapFooterToolbar from './ImageMapFooterToolbar';
 import ImageMapItems from './ImageMapItems';
@@ -89,7 +90,17 @@ class ImageMapEditor extends Component {
         styles: [],
         dataSources: [],
         editing: false,
+        showUrlModal: false,
+        tempUrl: '',
         descriptors: {},
+    }
+
+    componentWillMount() {
+        let query = new URLSearchParams(window.location.search);
+        if (query.has('design')) {
+            let url = 'http://printshop.indyfriend.vn/decompress/' + query.get('design') + '?origin=true'
+            this.setState({tempUrl: url});
+        }
     }
 
     componentDidMount() {
@@ -104,6 +115,12 @@ class ImageMapEditor extends Component {
         this.setState({
             selectedItem: null,
         });
+        let query = new URLSearchParams(window.location.search);
+        if (query.has('design')) {
+            let url = 'http://printshop.indyfriend.vn/decompress/' + query.get('design') + '?origin=true'
+            this.setState({tempUrl: url});
+            this.handlers.loadFromUrl(url);
+        }
     }
 
     canvasHandlers = {
@@ -498,6 +515,56 @@ class ImageMapEditor extends Component {
                 }, 500);
             }
         },
+        onUrlModalOk: () => {
+            const { tempUrl } = this.state;
+            this.setState({showUrlModal: false});
+
+            this.handlers.loadFromUrl(tempUrl);
+        },
+        onUrlModalCancel: () => {
+            this.setState({
+                showUrlModal: false
+            });
+        },
+        onShowUrlModal: () => {
+            this.setState({
+                showUrlModal: true
+            });
+        },
+
+        loadFromUrl: (url) => {
+            this.showLoading(true);
+            axios.get(url).then(res => {
+                this.showLoading(false);
+                let json = res.data;
+                if (typeof json === 'string') {
+                    json = JSON.parse(json);
+                }
+                if (Array.isArray(json)) {
+                    json = json[0];
+                }
+                const { objects, animations, styles, dataSources } = json;
+                this.setState({
+                    animations,
+                    styles,
+                    dataSources,
+                });
+                if (objects) {
+                    this.canvasRef.handler.clear(true);
+                    const data = objects.filter((obj) => {
+                        if (!obj.id) {
+                            obj.id = uuid()
+                            // return false;
+                        }
+                        return true;
+                    });
+                    this.canvasRef.handler.importJSON(data);
+                }
+            }).catch((e) => {
+                console.error(e.message);
+            });
+        },
+
         onUpload: () => {
             const inputEl = document.createElement('input');
             inputEl.accept = '.json';
@@ -602,6 +669,7 @@ class ImageMapEditor extends Component {
             dataSources,
             editing,
             descriptors,
+            showUrlModal,
         } = this.state;
         const {
             onAdd,
@@ -619,6 +687,9 @@ class ImageMapEditor extends Component {
             onChangePreview,
             onDownload,
             onUpload,
+            onShowUrlModal,
+            onUrlModalCancel,
+            onUrlModalOk,
             onChangeAnimations,
             onChangeStyles,
             onChangeDataSources,
@@ -641,7 +712,7 @@ class ImageMapEditor extends Component {
                             title={i18n.t('imagemap.imagemap-editing-confirm')}
                             okText={i18n.t('action.ok')}
                             cancelText={i18n.t('action.cancel')}
-                            onConfirm={onUpload}
+                            onConfirm={onShowUrlModal}
                             placement="bottomRight"
                         >
                             <CommonButton
@@ -659,7 +730,7 @@ class ImageMapEditor extends Component {
                             icon="file-upload"
                             tooltipTitle={i18n.t('action.upload')}
                             tooltipPlacement="bottomRight"
-                            onClick={onUpload}
+                            onClick={onShowUrlModal}
                         />
                     )
                 }
@@ -671,6 +742,15 @@ class ImageMapEditor extends Component {
                     onClick={onSaveImage}
                     tooltipPlacement="bottomRight"
                 />
+                <Modal
+                    onCancel={onUrlModalCancel}
+                    onOk={onUrlModalOk}
+                    visible={showUrlModal}
+                >
+                    <Form.Item label={i18n.t('common.url')} colon={false}>
+                        <Input defaultValue={this.state.tempUrl} onChange={(e) => { this.setState({ tempUrl: e.target.value }); }}  />
+                    </Form.Item>
+                </Modal>
             </React.Fragment>
         );
         const titleContent = (
