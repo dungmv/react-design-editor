@@ -93,6 +93,8 @@ class ImageMapEditor extends Component {
         showUrlModal: false,
         tempUrl: '',
         descriptors: {},
+        pages: [],
+        selectedPage: 0
     }
 
     componentWillMount() {
@@ -482,27 +484,7 @@ class ImageMapEditor extends Component {
                         }
                     };
                     reader.onload = (e) => {
-                        let json = JSON.parse(e.target.result);
-                        if (Array.isArray(json)) {
-                            json = json[0];
-                        }
-                        const { objects, animations, styles, dataSources } = json;
-                        this.setState({
-                            animations,
-                            styles,
-                            dataSources,
-                        });
-                        if (objects) {
-                            this.canvasRef.handler.clear(true);
-                            const data = objects.filter((obj) => {
-                                if (!obj.id) {
-                                    obj.id = uuid()
-                                    // return false;
-                                }
-                                return true;
-                            });
-                            this.canvasRef.handler.importJSON(JSON.stringify(data));
-                        }
+                        this.handlers.onLoadFromJson(e.target.result);
                     };
                     reader.onloadend = () => {
                         this.showLoading(false);
@@ -516,9 +498,12 @@ class ImageMapEditor extends Component {
             }
         },
         onUrlModalOk: () => {
-            const { tempUrl } = this.state;
+            let { tempUrl } = this.state;
             this.setState({showUrlModal: false});
-
+            if (!(tempUrl.startsWith('https://') || tempUrl.startsWith('http://'))) {
+                tempUrl = 'http://printshop.indyfriend.vn/decompress/' + tempUrl + '?origin=true'
+                this.setState({tempUrl: tempUrl});
+            }
             this.handlers.loadFromUrl(tempUrl);
         },
         onUrlModalCancel: () => {
@@ -531,40 +516,6 @@ class ImageMapEditor extends Component {
                 showUrlModal: true
             });
         },
-
-        loadFromUrl: (url) => {
-            this.showLoading(true);
-            axios.get(url).then(res => {
-                this.showLoading(false);
-                let json = res.data;
-                if (typeof json === 'string') {
-                    json = JSON.parse(json);
-                }
-                if (Array.isArray(json)) {
-                    json = json[0];
-                }
-                const { objects, animations, styles, dataSources } = json;
-                this.setState({
-                    animations,
-                    styles,
-                    dataSources,
-                });
-                if (objects) {
-                    this.canvasRef.handler.clear(true);
-                    const data = objects.filter((obj) => {
-                        if (!obj.id) {
-                            obj.id = uuid()
-                            // return false;
-                        }
-                        return true;
-                    });
-                    this.canvasRef.handler.importJSON(data);
-                }
-            }).catch((e) => {
-                console.error(e.message);
-            });
-        },
-
         onUpload: () => {
             const inputEl = document.createElement('input');
             inputEl.accept = '.json';
@@ -577,6 +528,47 @@ class ImageMapEditor extends Component {
             inputEl.click();
             inputEl.remove();
         },
+
+        loadFromUrl: (url) => {
+            this.showLoading(true);
+            axios.get(url).then(res => {
+                this.showLoading(false);
+                this.handlers.onLoadFromJson(res.data);
+            }).catch((e) => {
+                console.error(e.message);
+            });
+        },
+        onLoadFromJson: (pages) => {
+            if (typeof pages === 'string') {
+                pages = JSON.parse(pages);
+            }
+            if (!Array.isArray(pages)) {
+                pages = [pages];
+            }
+            this.setState({pages, selectedPage: 0});
+            this.handlers.onLoadCanvas(pages[0]);
+        },
+
+        onLoadCanvas: (json) => {
+            const { objects, animations, styles, dataSources } = json;
+            this.setState({
+                animations,
+                styles,
+                dataSources
+            });
+            if (objects) {
+                this.canvasRef.handler.clear(true);
+                const data = objects.filter((obj) => {
+                    if (!obj.id) {
+                        obj.id = uuid()
+                        // return false;
+                    }
+                    return true;
+                });
+                this.canvasRef.handler.importJSON(data);
+            }
+        },
+
         onDownload: () => {
             this.showLoading(true);
             const objects = this.canvasRef.handler.exportJSON().objects.filter((obj) => {
@@ -627,6 +619,10 @@ class ImageMapEditor extends Component {
         onSaveImage: () => {
             this.canvasRef.handler.saveCanvasImage();
         },
+        onChangePage: (value) => {
+            this.setState({selectedPage: value});
+            this.handlers.onLoadCanvas(this.state.pages[value - 1]);
+        }
     }
 
     shortcutHandlers = {
@@ -670,6 +666,8 @@ class ImageMapEditor extends Component {
             editing,
             descriptors,
             showUrlModal,
+            pages,
+            selectedPage
         } = this.state;
         const {
             onAdd,
@@ -694,6 +692,7 @@ class ImageMapEditor extends Component {
             onChangeStyles,
             onChangeDataSources,
             onSaveImage,
+            onChangePage,
         } = this.handlers;
         const action = (
             <React.Fragment>
@@ -769,7 +768,13 @@ class ImageMapEditor extends Component {
                 <ImageMapItems ref={(c) => { this.itemsRef = c; }} canvasRef={this.canvasRef} descriptors={descriptors} />
                 <div className="rde-editor-canvas-container">
                     <div className="rde-editor-header-toolbar">
-                        <ImageMapHeaderToolbar canvasRef={this.canvasRef} selectedItem={selectedItem} onSelect={onSelect} />
+                        <ImageMapHeaderToolbar
+                            canvasRef={this.canvasRef}
+                            selectedItem={selectedItem}
+                            onSelect={onSelect}
+                            pages={pages}
+                            selectedPage={selectedPage}
+                            onChangePage={onChangePage}/>
                     </div>
                     <div
                         ref={(c) => { this.container = c; }}

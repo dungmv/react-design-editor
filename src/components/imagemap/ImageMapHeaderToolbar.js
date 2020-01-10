@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
+import { Select } from 'antd';
 
 import { FlexBox, FlexItem } from '../flex';
 import ImageMapList from './ImageMapList';
@@ -14,7 +15,7 @@ class ImageMapHeaderToolbar extends Component {
     }
 
     render() {
-        const { canvasRef, selectedItem } = this.props;
+        const { canvasRef, selectedItem, pages, onChangePage, selectedPage } = this.props;
         const isCropping = canvasRef ? canvasRef.handler.interactionMode === 'crop' : false;
         return (
             <FlexBox className="rde-editor-header-toolbar-container" flex="1">
@@ -23,7 +24,7 @@ class ImageMapHeaderToolbar extends Component {
                         className="rde-action-btn"
                         shape="circle"
                         icon="layer-group"
-                        tooltipTitle={i18n.t('action.canvas-list')}
+                        tooltipTitle="Layer"
                         tooltipPlacement="right"
                     />
                     <div className="rde-canvas-list">
@@ -159,6 +160,13 @@ class ImageMapHeaderToolbar extends Component {
                         icon="trash"
                         tooltipTitle={i18n.t('action.delete')}
                     />
+                </FlexItem>
+                <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-operation">
+                    <Select defaultValue={selectedPage} onChange={onChangePage} style={{ width: '64px' }}>
+                        {
+                            pages.map((v, k) => <Select.Option key={k} value={`${k + 1}`}>{k + 1}</Select.Option>)
+                        }
+                    </Select>
                 </FlexItem>
                 <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-history">
                     <CommonButton
