@@ -1536,6 +1536,8 @@ class Handler implements HandlerOptions {
                 }
                 if (obj.clipPath) {
                     const self = this;
+                    obj.clipPath.top += top - prevTop;
+                    obj.clipPath.left += left - prevLeft;
                     fabric.util.enlivenObjects([obj.clipPath], function(enlivedProps: Array<fabric.Object>) {
                         obj.clipPath = enlivedProps[0];
                         self.add(obj, false, true);
