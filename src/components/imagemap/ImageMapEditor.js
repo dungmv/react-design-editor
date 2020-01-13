@@ -98,11 +98,6 @@ class ImageMapEditor extends Component {
     }
 
     componentWillMount() {
-        let query = new URLSearchParams(window.location.search);
-        if (query.has('design')) {
-            let url = 'http://printshop.indyfriend.vn/decompress/' + query.get('design') + '?origin=true'
-            this.setState({tempUrl: url});
-        }
     }
 
     componentDidMount() {
@@ -117,9 +112,14 @@ class ImageMapEditor extends Component {
         this.setState({
             selectedItem: null,
         });
+
         let query = new URLSearchParams(window.location.search);
         if (query.has('design')) {
-            let url = 'http://printshop.indyfriend.vn/decompress/' + query.get('design') + '?origin=true'
+            let url = 'http://printshop.indyfriend.vn/decompress/' + query.get('design') + '?origin=true';
+            this.setState({tempUrl: url});
+            this.handlers.loadFromUrl(url);
+        } else if (query.has('product')) {
+            let url = 'http://printshop.indyfriend.vn/products/' + query.get('product') + '?origin=true';
             this.setState({tempUrl: url});
             this.handlers.loadFromUrl(url);
         }
