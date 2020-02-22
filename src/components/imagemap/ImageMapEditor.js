@@ -147,21 +147,11 @@ class ImageMapEditor extends Component {
                 if (selectedItem && target.id === selectedItem.id) {
                     return;
                 }
-                this.canvasRef.handler.getObjects().forEach((obj) => {
-                    if (obj) {
-                        this.canvasRef.handler.animationHandler.initAnimation(obj, true);
-                    }
-                });
                 this.setState({
                     selectedItem: target,
                 });
                 return;
             }
-            this.canvasRef.handler.getObjects().forEach((obj) => {
-                if (obj) {
-                    this.canvasRef.handler.animationHandler.initAnimation(obj, true);
-                }
-            });
             this.setState({
                 selectedItem: null,
             });

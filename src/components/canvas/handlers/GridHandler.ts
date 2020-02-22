@@ -2,7 +2,6 @@ import { fabric } from 'fabric';
 
 import Handler from './Handler';
 import { FabricObject } from '../utils';
-import { NodeObject } from '../objects/Node';
 
 class GridHandler {
     handler?: Handler;
@@ -60,13 +59,6 @@ class GridHandler {
                     top: Math.round(target.top / grid) * grid,
                 });
                 activeSelection.setCoords();
-                activeSelection.getObjects().forEach((obj: any) => {
-                    if (obj.superType === 'node') {
-                        const left = target.left + obj.left + (target.width / 2);
-                        const top = target.top + obj.top + (target.height / 2);
-                        this.handler.portHandler.setCoords({ ...obj, left, top });
-                    }
-                });
                 return;
             }
             const obj = target as FabricObject;
@@ -75,7 +67,6 @@ class GridHandler {
                 top: Math.round(target.top / grid) * grid,
             });
             target.setCoords();
-            this.handler.portHandler.setCoords(target as NodeObject);
         }
     }
 }

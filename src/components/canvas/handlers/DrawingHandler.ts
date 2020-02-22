@@ -3,7 +3,7 @@ import uuid from 'uuid';
 
 import Handler from './Handler';
 import { FabricEvent, FabricObject } from '../utils';
-import { Arrow, Line } from '../objects';
+import { Line } from '../objects';
 
 class DrawingHandler {
     handler: Handler;
@@ -320,19 +320,6 @@ class DrawingHandler {
                     fill: 'red',
                 });
             }
-            const points = [x, y, x, y];
-            this.handler.activeLine = new Arrow(points, {
-                strokeWidth: 2,
-                fill: '#999999',
-                stroke: '#999999',
-                class: 'line',
-                originX: 'center',
-                originY: 'center',
-                selectable: false,
-                hasBorders: false,
-                hasControls: false,
-                evented: false,
-            });
             this.handler.pointArray.push(circle);
             this.handler.canvas.add(this.handler.activeLine);
             this.handler.canvas.add(circle);

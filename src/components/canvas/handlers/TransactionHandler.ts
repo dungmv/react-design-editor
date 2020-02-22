@@ -3,8 +3,6 @@ import throttle from 'lodash/throttle';
 
 import Handler from './Handler';
 import { FabricObject } from '../utils';
-import { NodeObject } from '../objects/Node';
-import { LinkObject } from '../objects/Link';
 
 export type TransactionType = 'add'
 | 'remove'
@@ -87,8 +85,6 @@ class TransactionHandler {
                     return false;
                 } else if (obj.id === 'grid') {
                     return false;
-                } else if (obj.superType === 'port') {
-                    return false;
                 }
                 return true;
             });
@@ -142,22 +138,7 @@ class TransactionHandler {
         fabric.util.enlivenObjects(objects, (enlivenObjects: FabricObject[]) => {
             enlivenObjects.forEach(obj => {
                 const targetIndex = this.handler.canvas._objects.length;
-                if (obj.superType === 'node') {
-                    this.handler.canvas.insertAt(obj, targetIndex, false);
-                    this.handler.portHandler.create(obj as NodeObject);
-                } else if (obj.superType === 'link') {
-                    const link = obj as LinkObject;
-                    this.handler.objects = this.handler.getObjects();
-                    this.handler.linkHandler.create({
-                        type: 'curvedLink',
-                        fromNode: link.fromNode.id,
-                        fromPort: link.fromPort.id,
-                        toNode: link.toNode.id,
-                        toPort: link.toPort.id,
-                    });
-                } else {
-                    this.handler.canvas.insertAt(obj, targetIndex, false);
-                }
+                this.handler.canvas.insertAt(obj, targetIndex, false);
             });
             this.handler.canvas.renderOnAddRemove = true;
             this.active = false;

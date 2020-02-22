@@ -3,8 +3,6 @@ import anime from 'animejs';
 
 import Handler from './Handler';
 import { FabricObject, FabricEvent } from '../utils';
-import { VideoObject } from '../objects/Video';
-import { NodeObject } from '../objects/Node';
 
 class EventHandler {
     handler: Handler;
@@ -166,29 +164,6 @@ class EventHandler {
             if (this.handler.editable && this.handler.guidelineOption.enabled) {
                 this.handler.guidelineHandler.movingGuidelines(target);
             }
-            if (target.type === 'activeSelection') {
-                const activeSelection = target as fabric.ActiveSelection;
-                activeSelection.getObjects().forEach((obj: any) => {
-                    const left = target.left + obj.left + (target.width / 2);
-                    const top = target.top + obj.top + (target.height / 2);
-                    if (obj.superType === 'node') {
-                        this.handler.portHandler.setCoords({ ...obj, left, top });
-                    } else if (obj.superType === 'element') {
-                        const { id } = obj;
-                        const el = this.handler.elementHandler.findById(id);
-                        // TODO... Element object incorrect position
-                        this.handler.elementHandler.setPositionByOrigin(el, obj, left, top);
-                    }
-                });
-                return;
-            }
-            if (target.superType === 'node') {
-                this.handler.portHandler.setCoords(target);
-            } else if (target.superType === 'element') {
-                const { id } = target;
-                const el = this.handler.elementHandler.findById(id);
-                this.handler.elementHandler.setPosition(el, target);
-            }
         }
     }
 
@@ -202,11 +177,6 @@ class EventHandler {
         if (!this.handler.transactionHandler.active) {
             this.handler.transactionHandler.save('moved');
         }
-        if (target.superType === 'element') {
-            const { id } = target;
-            const el = this.handler.elementHandler.findById(id);
-            this.handler.elementHandler.setPosition(el, target);
-        }
     }
 
     /**
@@ -214,23 +184,10 @@ class EventHandler {
      * @param {FabricEvent} opt
      */
     public scaling = (opt: FabricEvent) => {
-        const { target } = opt as any;
         if (this.handler.interactionMode === 'crop') {
             this.handler.cropHandler.resize(opt);
         }
         // TODO...this.handler.guidelineHandler.scalingGuidelines(target);
-        if (target.superType === 'element') {
-            const { id, width, height } = target;
-            const el = this.handler.elementHandler.findById(id);
-            // update the element
-            this.handler.elementHandler.setScaleOrAngle(el, target);
-            this.handler.elementHandler.setSize(el, target);
-            this.handler.elementHandler.setPosition(el, target);
-            const video = target as VideoObject;
-            if (video.type === 'video' && video.player) {
-                video.player.setPlayerSize(width, height);
-            }
-        }
     }
 
     /**
@@ -248,13 +205,7 @@ class EventHandler {
      * @param {FabricEvent} opt
      */
     public rotating = (opt: FabricEvent) => {
-        const { target } = opt as any;
-        if (target.superType === 'element') {
-            const { id } = target;
-            const el = this.handler.elementHandler.findById(id);
-            // update the element
-            this.handler.elementHandler.setScaleOrAngle(el, target);
-        }
+        console.log(opt);
     }
 
     /**
@@ -349,33 +300,6 @@ class EventHandler {
         }
         const target = event.target as any;
         if (editable) {
-            if (this.handler.prevTarget && this.handler.prevTarget.superType === 'link') {
-                this.handler.prevTarget.set({
-                    stroke: this.handler.prevTarget.originStroke,
-                });
-            }
-            if (target && target.type === 'fromPort') {
-                if (this.handler.interactionMode === 'link' && this.handler.activeLine) {
-                    console.warn('Already drawing links.');
-                    return;
-                }
-                this.handler.linkHandler.init(target);
-                return;
-            }
-            if (target && this.handler.interactionMode === 'link' && (target.type === 'toPort' || target.superType === 'node')) {
-                let toPort;
-                if (target.superType === 'node') {
-                    toPort = target.toPort;
-                } else {
-                    toPort = target;
-                }
-                if (toPort && toPort.links.some((link: any) => link.fromNode.id === this.handler.activeLine.fromNode.id)) {
-                    console.warn('Duplicate connections can not be made.');
-                    return;
-                }
-                this.handler.linkHandler.generate(toPort);
-                return;
-            }
             this.handler.guidelineHandler.viewportTransform = this.handler.canvas.viewportTransform;
             this.handler.guidelineHandler.zoom = this.handler.canvas.getZoom();
             if (this.handler.interactionMode === 'selection') {
@@ -420,18 +344,6 @@ class EventHandler {
             this.handler.modeHandler.moving(event.e);
             this.handler.canvas.requestRenderAll();
         }
-        if (!this.handler.editable && event.target) {
-            if (event.target.superType === 'element') {
-                return;
-            }
-            if (event.target.id !== 'workarea') {
-                if (event.target !== this.handler.target) {
-                    this.handler.tooltipHandler.show(event.target);
-                }
-            } else {
-                this.handler.tooltipHandler.hide(event.target);
-            }
-        }
         if (this.handler.interactionMode === 'polygon') {
             if (this.handler.activeLine && this.handler.activeLine.class === 'line') {
                 const pointer = this.handler.canvas.getPointer(event.e);
@@ -458,12 +370,6 @@ class EventHandler {
                 this.handler.activeLine.set({ x2: pointer.x, y2: pointer.y });
             }
             this.handler.canvas.requestRenderAll();
-        } else if (this.handler.interactionMode === 'link') {
-            if (this.handler.activeLine && this.handler.activeLine.class === 'line') {
-                const pointer = this.handler.canvas.getPointer(event.e);
-                this.handler.activeLine.set({ x2: pointer.x, y2: pointer.y });
-            }
-            this.handler.canvas.requestRenderAll();
         }
         return;
     }
@@ -473,26 +379,10 @@ class EventHandler {
      * @param {FabricEvent<MouseEvent>} opt
      * @returns
      */
-    public mouseup = (opt: FabricEvent) => {
-        const event = opt as FabricEvent<MouseEvent>;
+    public mouseup = () => {
         if (this.handler.interactionMode === 'grab') {
             this.panning = false;
             return;
-        }
-        const { target, e } = event;
-        if (this.handler.interactionMode === 'selection') {
-            if (target && e.shiftKey && target.superType === 'node') {
-                const node = target as NodeObject;
-                this.handler.canvas.discardActiveObject();
-                const nodes = [] as NodeObject[];
-                this.handler.nodeHandler.getNodePath(node, nodes);
-                const activeSelection = new fabric.ActiveSelection(nodes, {
-                    canvas: this.handler.canvas,
-                    ...this.handler.activeSelection,
-                });
-                this.handler.canvas.setActiveObject(activeSelection);
-                this.handler.canvas.requestRenderAll();
-            }
         }
         if (this.handler.editable && this.handler.guidelineOption.enabled) {
             this.handler.guidelineHandler.verticalLines.length = 0;
@@ -505,11 +395,7 @@ class EventHandler {
      * @description Mouse out on canvas
      * @param {FabricEvent<MouseEvent>} opt
      */
-    public mouseout = (opt: FabricEvent) => {
-        const event = opt as FabricEvent<MouseEvent>;
-        if (!event.target) {
-            this.handler.tooltipHandler.hide();
-        }
+    public mouseout = () => {
     }
 
     /**
@@ -583,12 +469,6 @@ class EventHandler {
                         top,
                     });
                     obj.setCoords();
-                    if (obj.superType === 'element') {
-                        const { id } = obj;
-                        const el = this.handler.elementHandler.findById(id);
-                        // update the element
-                        this.handler.elementHandler.setPosition(el, obj);
-                    }
                 }
             });
             this.handler.canvas.renderAll();
@@ -621,7 +501,6 @@ class EventHandler {
             scaleY,
         });
         this.handler.canvas.getObjects().forEach((obj: any) => {
-            const { id } = obj;
             if (obj.id !== 'workarea') {
                 const left = obj.left * diffScaleX;
                 const top = obj.top * diffScaleY;
@@ -634,16 +513,6 @@ class EventHandler {
                     top,
                 });
                 obj.setCoords();
-                if (obj.superType === 'element') {
-                    const video = obj as VideoObject;
-                    const { width, height } = obj;
-                    const el = this.handler.elementHandler.findById(id);
-                    this.handler.elementHandler.setSize(el, obj);
-                    if (video.player) {
-                        video.player.setPlayerSize(width, height);
-                    }
-                    this.handler.elementHandler.setPosition(el, obj);
-                }
             }
         });
         this.handler.canvas.renderAll();
@@ -782,12 +651,7 @@ class EventHandler {
                 this.handler.drawingHandler.polygon.finish();
             } else if (this.handler.interactionMode === 'line') {
                 this.handler.drawingHandler.line.finish();
-            } else if (this.handler.interactionMode === 'arrow') {
-                this.handler.drawingHandler.arrow.finish();
-            } else if (this.handler.interactionMode === 'link') {
-                this.handler.linkHandler.finish();
             }
-            this.handler.tooltipHandler.hide();
         }
         if (this.handler.canvas.wrapperEl !== document.activeElement) {
             return;

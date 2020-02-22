@@ -3,23 +3,16 @@ import warning from 'warning';
 import uuid from 'uuid';
 
 import {
-    ElementHandler,
     ImageHandler,
-    ChartHandler,
     CropHandler,
-    AnimationHandler,
     ContextmenuHandler,
-    TooltipHandler,
     ZoomHandler,
     WorkareaHandler,
     ModeHandler,
     TransactionHandler,
-    LinkHandler,
     AlignmentHandler,
     GuidelineHandler,
     GridHandler,
-    PortHandler,
-    NodeHandler,
     EventHandler,
     DrawingHandler,
 } from '.';
@@ -39,7 +32,6 @@ import {
     FabricGroup,
 } from '../utils';
 import CanvasObject from '../CanvasObject';
-import { NodeObject } from '../objects/Node';
 import { TransactionEvent } from './TransactionHandler';
 
 export interface HandlerOptions {
@@ -258,20 +250,13 @@ class Handler implements HandlerOptions {
     public onTransaction?: (transaction: TransactionEvent) => void;
 
     public imageHandler: ImageHandler;
-    public chartHandler: ChartHandler;
-    public elementHandler: ElementHandler;
     public cropHandler: CropHandler;
-    public animationHandler: AnimationHandler;
     public contextmenuHandler: ContextmenuHandler;
-    public tooltipHandler: TooltipHandler;
     public zoomHandler: ZoomHandler;
     public workareaHandler: WorkareaHandler;
     public modeHandler: ModeHandler;
     public transactionHandler: TransactionHandler;
     public gridHandler: GridHandler;
-    public portHandler: PortHandler;
-    public linkHandler: LinkHandler;
-    public nodeHandler: NodeHandler;
     public alignmentHandler: AlignmentHandler;
     public guidelineHandler: GuidelineHandler;
     public eventHandler: EventHandler;
@@ -348,20 +333,13 @@ class Handler implements HandlerOptions {
      */
     public initHandler = (_options: HandlerOptions) => {
         this.imageHandler = new ImageHandler(this);
-        this.chartHandler = new ChartHandler(this);
-        this.elementHandler = new ElementHandler(this);
         this.cropHandler = new CropHandler(this);
-        this.animationHandler = new AnimationHandler(this);
         this.contextmenuHandler = new ContextmenuHandler(this);
-        this.tooltipHandler = new TooltipHandler(this);
         this.zoomHandler = new ZoomHandler(this);
         this.workareaHandler = new WorkareaHandler(this);
         this.modeHandler = new ModeHandler(this);
         this.transactionHandler = new TransactionHandler(this);
         this.gridHandler = new GridHandler(this);
-        this.portHandler = new PortHandler(this);
-        this.linkHandler = new LinkHandler(this);
-        this.nodeHandler = new NodeHandler(this);
         this.alignmentHandler = new AlignmentHandler(this);
         this.guidelineHandler = new GuidelineHandler(this);
         this.eventHandler = new EventHandler(this);
@@ -377,8 +355,6 @@ class Handler implements HandlerOptions {
             if (obj.id === 'workarea') {
                 return false;
             } else if (obj.id === 'grid') {
-                return false;
-            } else if (obj.superType === 'port') {
                 return false;
             } else if (!obj.id) {
                 return false;
@@ -407,24 +383,6 @@ class Handler implements HandlerOptions {
         activeObject.set(key, value);
         activeObject.setCoords();
         this.canvas.requestRenderAll();
-        const { id, superType, type, player, width, height } = activeObject as any;
-        if (superType === 'element') {
-            if (key === 'visible') {
-                if (value) {
-                    activeObject.element.style.display = 'block';
-                } else {
-                    activeObject.element.style.display = 'none';
-                }
-            }
-            const el = this.elementHandler.findById(id);
-            // update the element
-            this.elementHandler.setScaleOrAngle(el, activeObject);
-            this.elementHandler.setSize(el, activeObject);
-            this.elementHandler.setPosition(el, activeObject);
-            if (type === 'video' && player) {
-                player.setPlayerSize(width, height);
-            }
-        }
         const { onModified } = this;
         if (onModified) {
             onModified(activeObject);
@@ -448,24 +406,6 @@ class Handler implements HandlerOptions {
             }
         });
         this.canvas.requestRenderAll();
-        const { id, superType, type, player, width, height } = activeObject;
-        if (superType === 'element') {
-            if ('visible' in option) {
-                if (option.visible) {
-                    activeObject.element.style.display = 'block';
-                } else {
-                    activeObject.element.style.display = 'none';
-                }
-            }
-            const el = this.elementHandler.findById(id);
-            // update the element
-            this.elementHandler.setScaleOrAngle(el, activeObject);
-            this.elementHandler.setSize(el, activeObject);
-            this.elementHandler.setPosition(el, activeObject);
-            if (type === 'video' && player) {
-                player.setPlayerSize(width, height);
-            }
-        }
         const { onModified } = this;
         if (onModified) {
             onModified(activeObject);
@@ -486,24 +426,6 @@ class Handler implements HandlerOptions {
         obj.set(key, value);
         obj.setCoords();
         this.canvas.renderAll();
-        const { id, superType, type, player, width, height } = obj as any;
-        if (superType === 'element') {
-            if (key === 'visible') {
-                if (value) {
-                    obj.element.style.display = 'block';
-                } else {
-                    obj.element.style.display = 'none';
-                }
-            }
-            const el = this.elementHandler.findById(id);
-            // update the element
-            this.elementHandler.setScaleOrAngle(el, obj);
-            this.elementHandler.setSize(el, obj);
-            this.elementHandler.setPosition(el, obj);
-            if (type === 'video' && player) {
-                player.setPlayerSize(width, height);
-            }
-        }
         const { onModified } = this;
         if (onModified) {
             onModified(obj);
@@ -534,24 +456,6 @@ class Handler implements HandlerOptions {
         obj.set(option);
         obj.setCoords();
         this.canvas.renderAll();
-        const { id, superType, type, player, width, height } = obj as any;
-        if (superType === 'element') {
-            if ('visible' in option) {
-                if (option.visible) {
-                    obj.element.style.display = 'block';
-                } else {
-                    obj.element.style.display = 'none';
-                }
-            }
-            const el = this.elementHandler.findById(id);
-            // update the element
-            this.elementHandler.setScaleOrAngle(el, obj);
-            this.elementHandler.setSize(el, obj);
-            this.elementHandler.setPosition(el, obj);
-            if (type === 'video' && player) {
-                player.setPlayerSize(width, height);
-            }
-        }
     }
 
     /**
@@ -681,10 +585,6 @@ class Handler implements HandlerOptions {
             container: this.container.id,
             editable,
         }, option);
-        // Individually create canvas object
-        if (obj.superType === 'link') {
-            return this.linkHandler.create(newOption, loaded, transaction);
-        }
         if (obj.type === 'svg') {
             return this.addSVG(newOption, centered, loaded);
         }
@@ -719,23 +619,6 @@ class Handler implements HandlerOptions {
             && !loaded
         ) {
             this.centerObject(createdObj, centered);
-        }
-        if (createdObj.superType === 'node') {
-            this.portHandler.create(createdObj as NodeObject);
-            if (createdObj.iconButton) {
-                this.canvas.add(createdObj.iconButton);
-            }
-        }
-        if (!editable && createdObj.animation && createdObj.animation.autoplay) {
-            this.animationHandler.play(createdObj.id);
-        }
-        if (!loaded) {
-            if (createdObj.superType === 'node') {
-                createdObj.setShadow({
-                    color: createdObj.stroke,
-                } as fabric.Shadow);
-                this.nodeHandler.highlightingNode(createdObj);
-            }
         }
         if (gridOption.enabled) {
             this.gridHandler.setCoords(createdObj);
@@ -810,9 +693,6 @@ class Handler implements HandlerOptions {
                 if (editable && !loaded) {
                     this.centerObject(createdObj, centered);
                 }
-                if (!editable && createdObj.animation && createdObj.animation.autoplay) {
-                    this.animationHandler.play(createdObj.id);
-                }
                 if (onAdd && !loaded && editable) {
                     onAdd(createdObj);
                 }
@@ -837,13 +717,6 @@ class Handler implements HandlerOptions {
      */
     public remove = (target?: FabricObject) => {
         const activeObject = target || this.canvas.getActiveObject() as any;
-        if (this.prevTarget && this.prevTarget.superType === 'link') {
-            this.linkHandler.remove(this.prevTarget);
-            if (!this.transactionHandler.active) {
-                this.transactionHandler.save('remove');
-            }
-            return;
-        }
         if (!activeObject) {
             return;
         }
@@ -852,31 +725,6 @@ class Handler implements HandlerOptions {
         }
         if (activeObject.type !== 'activeSelection') {
             this.canvas.discardActiveObject();
-            if (activeObject.superType === 'element') {
-                this.elementHandler.removeById(activeObject.id);
-            }
-            if (activeObject.superType === 'link') {
-                this.linkHandler.remove(activeObject);
-            } else if (activeObject.superType === 'node') {
-                if (activeObject.toPort) {
-                    if (activeObject.toPort.links.length) {
-                        activeObject.toPort.links.forEach((link: any) => {
-                            this.linkHandler.remove(link, 'from');
-                        });
-                    }
-                    this.canvas.remove(activeObject.toPort);
-                }
-                if (activeObject.fromPort && activeObject.fromPort.length) {
-                    activeObject.fromPort.forEach((port: any) => {
-                        if (port.links.length) {
-                            port.links.forEach((link: any) => {
-                                this.linkHandler.remove(link, 'to');
-                            });
-                        }
-                        this.canvas.remove(port);
-                    });
-                }
-            }
             this.canvas.remove(activeObject);
         } else {
             const { _objects: activeObjects } = activeObject;
@@ -886,28 +734,6 @@ class Handler implements HandlerOptions {
             }
             this.canvas.discardActiveObject();
             activeObjects.forEach((obj: any) => {
-                if (obj.superType === 'element') {
-                    this.elementHandler.removeById(obj.id);
-                } else if (obj.superType === 'node') {
-                    if (obj.toPort) {
-                        if (obj.toPort.links.length) {
-                            obj.toPort.links.forEach((link: any) => {
-                                this.linkHandler.remove(link, 'from');
-                            });
-                        }
-                        this.canvas.remove(obj.toPort);
-                    }
-                    if (obj.fromPort && obj.fromPort.length) {
-                        obj.fromPort.forEach((port: any) => {
-                            if (port.links.length) {
-                                port.links.forEach((link: any) => {
-                                    this.linkHandler.remove(link, 'to');
-                                });
-                            }
-                            this.canvas.remove(port);
-                        });
-                    }
-                }
                 this.canvas.remove(obj);
             });
         }
@@ -992,7 +818,6 @@ class Handler implements HandlerOptions {
                 }
             }
             this.canvas.setActiveObject(clonedObj);
-            this.portHandler.create(clonedObj as NodeObject);
             this.canvas.requestRenderAll();
         }, propertiesToInclude);
     }
@@ -1025,7 +850,6 @@ class Handler implements HandlerOptions {
                     cloned.on('mousedblclick', this.eventHandler.object.mousedblclick);
                 }
                 this.canvas.setActiveObject(cloned);
-                this.portHandler.create(cloned as NodeObject);
                 this.canvas.requestRenderAll();
             }, propertiesToInclude);
         }
@@ -1053,61 +877,9 @@ class Handler implements HandlerOptions {
     public copy = () => {
         const { propertiesToInclude } = this;
         const activeObject = this.canvas.getActiveObject() as FabricObject;
-        if (activeObject && activeObject.superType === 'link') {
-            return false;
-        }
         if (activeObject) {
             if (typeof activeObject.cloneable !== 'undefined' && !activeObject.cloneable) {
                 return false;
-            }
-            if (activeObject.type === 'activeSelection') {
-                const activeSelection = activeObject as fabric.ActiveSelection;
-                if (activeSelection.getObjects().some((obj: any) => obj.superType === 'node')) {
-                    if (this.keyEvent.clipboard) {
-                        const links = [] as any[];
-                        const objects = activeSelection.getObjects().map((obj: any, index: number) => {
-                            if (typeof obj.cloneable !== 'undefined' && !obj.cloneable) {
-                                return null;
-                            }
-                            if (obj.fromPort.length) {
-                                obj.fromPort.forEach((port: any) => {
-                                    if (port.links.length) {
-                                        port.links.forEach((link: any) => {
-                                            const linkTarget = {
-                                                fromNodeIndex: index,
-                                                fromPort: port.id,
-                                                type: 'curvedLink',
-                                                superType: 'link',
-                                            } as any;
-                                            const findIndex = activeSelection.getObjects().findIndex((compObj: any) => compObj.id === link.toNode.id);
-                                            if (findIndex >= 0) {
-                                                linkTarget.toNodeIndex = findIndex;
-                                                links.push(linkTarget);
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                            return {
-                                name: obj.name,
-                                description: obj.description,
-                                superType: obj.superType,
-                                type: obj.type,
-                                nodeClazz: obj.nodeClazz,
-                                configuration: obj.configuration,
-                                properties: {
-                                    left: activeObject.left + (activeObject.width / 2) + obj.left || 0,
-                                    top: activeObject.top + (activeObject.height / 2) + obj.top || 0,
-                                    iconName: obj.descriptor.icon,
-                                },
-                            };
-                        });
-                        this.copyToClipboard(JSON.stringify(objects.concat(links), null, '\t'));
-                        return true;
-                    }
-                    this.clipboard = activeObject;
-                    return true;
-                }
             }
             activeObject.clone((cloned: any) => {
                 if (this.keyEvent.clipboard) {
@@ -1149,79 +921,6 @@ class Handler implements HandlerOptions {
         }
         if (typeof clipboard.cloneable !== 'undefined' && !clipboard.cloneable) {
             return false;
-        }
-        if (clipboard.type === 'activeSelection') {
-            if (clipboard.getObjects().some((obj: any) => obj.superType === 'node')) {
-                this.canvas.discardActiveObject();
-                const objects = [] as any[];
-                const linkObjects = [] as any[];
-                clipboard.getObjects().forEach((obj: any) => {
-                    if (typeof obj.cloneable !== 'undefined' && !obj.cloneable) {
-                        return;
-                    }
-                    const clonedObj = obj.duplicate();
-                    if (clonedObj.type === 'SwitchNode') {
-                        clonedObj.set({
-                            left: obj.left + grid + grid,
-                            top: obj.top + grid,
-                        });
-                    } else {
-                        clonedObj.set({
-                            left: obj.left + grid,
-                            top: obj.top + grid,
-                        });
-                    }
-                    if (obj.fromPort.length) {
-                        obj.fromPort.forEach((port: any) => {
-                            if (port.links.length) {
-                                port.links.forEach((link: any) => {
-                                    const linkTarget = {
-                                        fromNode: clonedObj.id,
-                                        fromPort: port.id,
-                                    } as any;
-                                    const findIndex = clipboard.getObjects().findIndex((compObj: any) => compObj.id === link.toNode.id);
-                                    if (findIndex >= 0) {
-                                        linkTarget.toNodeIndex = findIndex;
-                                        linkObjects.push(linkTarget);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    if (clonedObj.dblclick) {
-                        clonedObj.on('mousedblclick', this.eventHandler.object.mousedblclick);
-                    }
-                    this.canvas.add(clonedObj);
-                    this.objects = this.getObjects();
-                    this.portHandler.create(clonedObj);
-                    objects.push(clonedObj);
-                });
-                if (linkObjects.length) {
-                    linkObjects.forEach((linkObject: any) => {
-                        const { fromNode, fromPort, toNodeIndex } = linkObject;
-                        const toNode = objects[toNodeIndex];
-                        const link = {
-                            type: 'curvedLink',
-                            fromNode,
-                            fromPort,
-                            toNode: toNode.id,
-                            toPort: toNode.toPort.id,
-                        };
-                        this.linkHandler.create(link);
-                    });
-                }
-                const activeSelection = new fabric.ActiveSelection(objects, {
-                    canvas: this.canvas,
-                    ...this.activeSelection,
-                });
-                this.clipboard = activeSelection;
-                this.canvas.setActiveObject(activeSelection);
-                this.canvas.renderAll();
-                if (!this.transactionHandler.active) {
-                    this.transactionHandler.save('paste');
-                }
-                return true;
-            }
         }
         clipboard.clone((clonedObj: any) => {
             this.canvas.discardActiveObject();
@@ -1266,7 +965,6 @@ class Handler implements HandlerOptions {
             });
             this.clipboard = newClipboard;
             this.canvas.setActiveObject(clonedObj);
-            this.portHandler.create(clonedObj);
             this.canvas.requestRenderAll();
             if (!this.transactionHandler.active) {
                 this.transactionHandler.save('paste');
@@ -1415,10 +1113,6 @@ class Handler implements HandlerOptions {
             if (obj.id === 'workarea') {
                 return false;
             } else if (!obj.evented) {
-                return false;
-            } else if (obj.superType === 'link') {
-                return false;
-            } else if (obj.superType === 'port') {
                 return false;
             } else if (obj.superType === 'element') {
                 return false;
@@ -1690,14 +1384,6 @@ class Handler implements HandlerOptions {
      * @param {boolean} [includeWorkarea=false]
      */
     public clear = (includeWorkarea = false) => {
-        const ids = this.canvas.getObjects().reduce((prev, curr: any) => {
-            if (curr.superType === 'element') {
-                prev.push(curr.id);
-                return prev;
-            }
-            return prev;
-        }, []);
-        this.elementHandler.removeByIds(ids);
         if (includeWorkarea) {
             this.canvas.clear();
             this.workarea = null;

@@ -175,9 +175,6 @@ class Canvas extends Component<CanvasProps> {
         this.handler.eventHandler.detachEventListener();
         this.cancelObserver();
         this.handler.clear(true);
-        if (this.handler.tooltipHandler.tooltipEl) {
-            document.body.removeChild(this.handler.tooltipHandler.tooltipEl);
-        }
         if (this.handler.contextmenuHandler.contextmenuEl) {
             document.body.removeChild(this.handler.contextmenuHandler.contextmenuEl);
         }
