@@ -490,22 +490,29 @@ class ImageMapEditor extends Component {
             this.showLoading(true);
             axios.get(url).then(res => {
                 this.showLoading(false);
-                this.handlers.loadFonts(res.data.fonts);
-                this.handlers.onLoadFromJson(res.data.designs);
+                this.handlers.loadFonts(res.data.fonts).then((values) => {
+                    this.handlers.onLoadFromJson(res.data.designs);
+                });
             }).catch((e) => {
                 console.error(e.message);
             });
         },
         loadFonts: (fonts) => {
+            let promises = [];
             for(let i = 0; i < fonts.length; i++) {
-                let fontData = fonts[i];
-                var junction_font = new FontFace(fontData.font_name, 'url(https://cdn.indyfriend.vn/' + fontData.url + ')');
-                junction_font.load().then((loaded_face) => {
-                    document.fonts.add(loaded_face);
-                }, (reason) => { 
-                    console.error(reason);
+                let p = new Promise((resolve, reject) => {
+                    let fontData = fonts[i];
+                    var junction_font = new FontFace(fontData.font_name, 'url(https://cdn.indyfriend.vn/' + fontData.url + ')');
+                    junction_font.load().then((loaded_face) => {
+                        document.fonts.add(loaded_face);
+                        resolve();
+                    }, (reason) => {
+                        console.error(reason); resolve();
+                    });
                 });
+                promises.push(p);
             }
+            return Promise.all(promises);
         },
         onLoadFromJson: (pages) => {
             if (typeof pages === 'string') {
