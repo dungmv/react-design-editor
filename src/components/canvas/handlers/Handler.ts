@@ -1486,9 +1486,6 @@ class Handler implements HandlerOptions {
      * @param {(canvas: FabricCanvas) => void} [callback]
      */
     public importJSON = (json: any, callback?: (canvas: FabricCanvas) => void) => {
-        if (typeof json === 'string') {
-            json = JSON.parse(json);
-        }
         let prevLeft = 0;
         let prevTop = 0;
         this.canvas.setBackgroundColor(this.canvasOption.backgroundColor, this.canvas.renderAll.bind(this.canvas));
@@ -1540,11 +1537,11 @@ class Handler implements HandlerOptions {
                     obj.clipPath.left += left - prevLeft;
                     fabric.util.enlivenObjects([obj.clipPath], function(enlivedProps: Array<fabric.Object>) {
                         obj.clipPath = enlivedProps[0];
-                        self.add(obj, false, true);
+                        self.add(obj, false, true, false);
                         self.canvas.renderAll();
                     }, null);
                 } else {
-                    this.add(obj, false, true);
+                    this.add(obj, false, true, false);
                     this.canvas.renderAll();
                 }
             });
@@ -1558,7 +1555,7 @@ class Handler implements HandlerOptions {
     /**
      * @description Export json
      */
-    public exportJSON = () => this.canvas.toDatalessJSON(this.propertiesToInclude)
+    public exportJSON = () => this.canvas.toJSON(this.propertiesToInclude)
 
     /**
      * @description Active selection to group

@@ -467,36 +467,6 @@ class ImageMapEditor extends Component {
                 this.preview.canvasRef.handler.clear();
             });
         },
-        onProgress: (progress) => {
-            this.setState({
-                progress,
-            });
-        },
-        onImport: (files) => {
-            if (files) {
-                this.showLoading(true);
-                setTimeout(() => {
-                    const reader = new FileReader();
-                    reader.onprogress = (e) => {
-                        if (e.lengthComputable) {                                            
-                            const progress = parseInt(((e.loaded / e.total) * 100), 10);
-                            this.handlers.onProgress(progress);
-                        }
-                    };
-                    reader.onload = (e) => {
-                        this.handlers.onLoadFromJson(e.target.result);
-                    };
-                    reader.onloadend = () => {
-                        this.showLoading(false);
-                    };
-                    reader.onerror = (e) => {
-                        alert(JSON.stringify(e));
-                        this.showLoading(false);
-                    };
-                    reader.readAsText(files[0]);
-                }, 500);
-            }
-        },
         onUrlModalOk: () => {
             let { tempUrl } = this.state;
             this.setState({showUrlModal: false});
@@ -516,34 +486,30 @@ class ImageMapEditor extends Component {
                 showUrlModal: true
             });
         },
-        onUpload: () => {
-            const inputEl = document.createElement('input');
-            inputEl.accept = '.json';
-            inputEl.type = 'file';
-            inputEl.hidden = true;
-            inputEl.onchange = (e) => {
-                this.handlers.onImport(e.target.files);
-            };
-            document.body.appendChild(inputEl); // required for firefox
-            inputEl.click();
-            inputEl.remove();
-        },
-
         loadFromUrl: (url) => {
             this.showLoading(true);
             axios.get(url).then(res => {
                 this.showLoading(false);
-                this.handlers.onLoadFromJson(res.data);
+                this.handlers.loadFonts(res.data.fonts);
+                this.handlers.onLoadFromJson(res.data.designs);
             }).catch((e) => {
                 console.error(e.message);
             });
         },
+        loadFonts: (fonts) => {
+            for(let i = 0; i < fonts.length; i++) {
+                let fontData = fonts[i];
+                var junction_font = new FontFace(fontData.font_name, 'url(https://cdn.indyfriend.vn/' + fontData.url + ')');
+                junction_font.load().then((loaded_face) => {
+                    document.fonts.add(loaded_face);
+                }, (reason) => { 
+                    console.error(reason);
+                });
+            }
+        },
         onLoadFromJson: (pages) => {
             if (typeof pages === 'string') {
                 pages = JSON.parse(pages);
-            }
-            if (!Array.isArray(pages)) {
-                pages = [pages];
             }
             this.setState({pages, selectedPage: 0});
             this.handlers.onLoadCanvas(pages[0]);
@@ -659,7 +625,6 @@ class ImageMapEditor extends Component {
             selectedItem,
             zoomRatio,
             loading,
-            progress,
             animations,
             styles,
             dataSources,
@@ -684,7 +649,6 @@ class ImageMapEditor extends Component {
         const {
             onChangePreview,
             onDownload,
-            onUpload,
             onShowUrlModal,
             onUrlModalCancel,
             onUrlModalOk,

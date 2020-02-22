@@ -19,3 +19,4 @@ export { default as CurvedLink } from './CurvedLink';
 export { default as OrthogonalLink } from './OrthogonalLink';
 
 export { default as Port } from './Port';
+export { default as Line } from './Line';
