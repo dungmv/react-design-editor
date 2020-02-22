@@ -51,7 +51,7 @@ class ImageMapFooterToolbar extends Component {
         selection: () => {
             this.props.canvasRef.handler.modeHandler.selection((obj) => {
                 return {
-                    selectable: obj.superType !== 'port',
+                    selectable: true,
                     evented: true,
                 };
             });

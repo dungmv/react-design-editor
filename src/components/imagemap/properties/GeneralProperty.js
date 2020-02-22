@@ -116,22 +116,20 @@ export default {
                         </Form.Item>
                     </Col>
                 </Row>
-                {data.superType === 'element' ? null : (
-                    <Form.Item label={i18n.t('common.angle')} colon={false}>
-                        {
-                            getFieldDecorator('angle', {
-                                rules: [{
-                                    type: 'number',
-                                    required: true,
-                                    message: 'Please input rotation',
-                                }],
-                                initialValue: data.angle,
-                            })(
-                                <Slider min={0} max={360} />,
-                            )
-                        }
-                    </Form.Item>
-                )}
+                <Form.Item label={i18n.t('common.angle')} colon={false}>
+                    {
+                        getFieldDecorator('angle', {
+                            rules: [{
+                                type: 'number',
+                                required: true,
+                                message: 'Please input rotation',
+                            }],
+                            initialValue: data.angle,
+                        })(
+                            <Slider min={0} max={360} />,
+                        )
+                    }
+                </Form.Item>
             </React.Fragment>
         );
     },

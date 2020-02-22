@@ -204,8 +204,6 @@ class ImageMapEditor extends Component {
             if (changedKey === 'file' || changedKey === 'src' || changedKey === 'code') {
                 if (selectedItem.type === 'image') {
                     this.canvasRef.handler.setImageById(selectedItem.id, changedValue);
-                } else if (selectedItem.superType === 'element') {
-                    this.canvasRef.handler.elementHandler.setById(selectedItem.id, changedValue);
                 }
                 return;
             }

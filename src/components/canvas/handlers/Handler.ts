@@ -272,8 +272,6 @@ class Handler implements HandlerOptions {
     public pointArray?: any[];
     public lineArray?: any[];
 
-    private isRequsetAnimFrame = false;
-    private requestFrame: any;
     private clipboard: any;
 
     constructor(options: HandlerOptions) {
@@ -524,13 +522,6 @@ class Handler implements HandlerOptions {
         if (!activeObject) {
             return;
         }
-        if (activeObject.superType === 'element') {
-            if (visible) {
-                activeObject.element.style.display = 'block';
-            } else {
-                activeObject.element.style.display = 'none';
-            }
-        }
         activeObject.set({
             visible,
         });
@@ -601,20 +592,14 @@ class Handler implements HandlerOptions {
         }
         this.canvas.add(createdObj);
         this.objects = this.getObjects();
-        if (!editable && !(obj.superType === 'element')) {
+        if (!editable) {
             createdObj.on('mousedown', this.eventHandler.object.mousedown);
         }
         if (createdObj.dblclick) {
             createdObj.on('mousedblclick', this.eventHandler.object.mousedblclick);
         }
-        if (this.objects.some(object => object.type === 'gif')) {
-            this.startRequestAnimFrame();
-        } else {
-            this.stopRequestAnimFrame();
-        }
         if (
             obj.superType !== 'drawing'
-            && obj.superType !== 'link'
             && editable
             && !loaded
         ) {
@@ -684,7 +669,7 @@ class Handler implements HandlerOptions {
                 this.canvas.add(createdObj);
                 this.objects = this.getObjects();
                 const { onAdd, editable } = this;
-                if (!editable && !(obj.superType === 'element')) {
+                if (!editable) {
                     createdObj.on('mousedown', this.eventHandler.object.mousedown);
                 }
                 if (createdObj.dblclick) {
@@ -883,24 +868,6 @@ class Handler implements HandlerOptions {
             }
             activeObject.clone((cloned: any) => {
                 if (this.keyEvent.clipboard) {
-                    if (cloned.superType === 'node') {
-                        const node = {
-                            name: cloned.name,
-                            description: cloned.description,
-                            superType: cloned.superType,
-                            type: cloned.type,
-                            nodeClazz: cloned.nodeClazz,
-                            configuration: cloned.configuration,
-                            properties: {
-                                left: cloned.left || 0,
-                                top: cloned.top || 0,
-                                iconName: cloned.descriptor.icon,
-                            },
-                        };
-                        const objects = [node];
-                        this.copyToClipboard(JSON.stringify(objects, null, '\t'));
-                        return;
-                    }
                     this.copyToClipboard(JSON.stringify(cloned.toObject(propertiesToInclude), null, '\t'));
                     return;
                 }
@@ -945,11 +912,7 @@ class Handler implements HandlerOptions {
                 }
                 clonedObj.setCoords();
             } else {
-                if (clonedObj.superType === 'node') {
-                    clonedObj = clonedObj.duplicate();
-                } else {
-                    clonedObj.set('id', uuid());
-                }
+                clonedObj.set('id', uuid());
                 this.canvas.add(clonedObj);
                 if (clonedObj.dblclick) {
                     clonedObj.on('mousedblclick', this.eventHandler.object.mousedblclick);
@@ -1114,8 +1077,6 @@ class Handler implements HandlerOptions {
                 return false;
             } else if (!obj.evented) {
                 return false;
-            } else if (obj.superType === 'element') {
-                return false;
             } else if (obj.locked) {
                 return false;
             }
@@ -1221,9 +1182,6 @@ class Handler implements HandlerOptions {
                     const diffTop = top - prevTop;
                     obj.left += diffLeft;
                     obj.top += diffTop;
-                }
-                if (obj.superType === 'element') {
-                    obj.id = uuid();
                 }
                 if (obj.clipPath) {
                     const self = this;
@@ -1397,35 +1355,6 @@ class Handler implements HandlerOptions {
         }
         this.objects = this.getObjects();
         this.canvas.renderAll();
-    }
-
-    /**
-     * @description Start request animation frame
-     */
-    public startRequestAnimFrame = () => {
-        if (!this.isRequsetAnimFrame) {
-            this.isRequsetAnimFrame = true;
-            const render = () => {
-                this.canvas.renderAll();
-                this.requestFrame = fabric.util.requestAnimFrame(render);
-            };
-            fabric.util.requestAnimFrame(render);
-        }
-    }
-
-    /**
-     * @description Stop request animation frame
-     */
-    public stopRequestAnimFrame = () => {
-        this.isRequsetAnimFrame = false;
-        const cancelRequestAnimFrame = (() => window.cancelAnimationFrame
-        // || window.webkitCancelRequestAnimationFrame
-        // || window.mozCancelRequestAnimationFrame
-        // || window.oCancelRequestAnimationFrame
-        // || window.msCancelRequestAnimationFrame
-        || clearTimeout
-        )();
-        cancelRequestAnimFrame(this.requestFrame);
     }
 
     /**

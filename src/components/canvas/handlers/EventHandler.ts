@@ -303,11 +303,6 @@ class EventHandler {
             this.handler.guidelineHandler.viewportTransform = this.handler.canvas.viewportTransform;
             this.handler.guidelineHandler.zoom = this.handler.canvas.getZoom();
             if (this.handler.interactionMode === 'selection') {
-                if (target && target.superType === 'link') {
-                    target.set({
-                        stroke: 'green',
-                    });
-                }
                 this.handler.prevTarget = target;
                 return;
             }
@@ -554,27 +549,17 @@ class EventHandler {
                                 this.handler.canvas.setActiveObject(createdObj as FabricObject);
                                 this.handler.canvas.requestRenderAll();
                             } else {
-                                const nodes = [] as any[];
                                 const targets = [] as any[];
                                 objects.forEach(obj => {
                                     if (!obj) {
                                         return;
                                     }
-                                    if (obj.superType === 'link') {
-                                        obj.fromNode = nodes[obj.fromNodeIndex].id;
-                                        obj.toNode = nodes[obj.toNodeIndex].id;
-                                    } else {
-                                        obj.left = obj.properties.left + grid;
-                                        obj.top = obj.properties.top + grid;
-                                    }
+                                    obj.left = obj.properties.left + grid;
+                                    obj.top = obj.properties.top + grid;
                                     const createdObj = this.handler.add(obj, false, true, false);
-                                    if (obj.superType === 'node') {
-                                        nodes.push(createdObj);
-                                    } else {
-                                        targets.push(createdObj);
-                                    }
+                                    targets.push(createdObj);
                                 });
-                                const activeSelection = new fabric.ActiveSelection(nodes.length ? nodes : targets, {
+                                const activeSelection = new fabric.ActiveSelection(targets, {
                                     canvas: this.handler.canvas,
                                     ...this.handler.activeSelection,
                                 });

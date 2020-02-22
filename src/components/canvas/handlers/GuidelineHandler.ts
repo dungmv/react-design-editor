@@ -93,10 +93,7 @@ class GuidelineHandler {
         // but we're not doing it here for perf. reasons -- as this a function that's invoked on every mouse move
 
         for (let i = canvasObjects.length; i--;) {
-            if (canvasObjects[i] === target
-                || canvasObjects[i].superType === 'port'
-                || canvasObjects[i].superType === 'link'
-                || !canvasObjects[i].evented) {
+            if (canvasObjects[i] === target || !canvasObjects[i].evented) {
                 continue;
             }
 
