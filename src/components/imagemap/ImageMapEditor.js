@@ -565,30 +565,6 @@ class ImageMapEditor extends Component {
             anchorEl.remove();
             this.showLoading(false);
         },
-        onChangeAnimations: (animations) => {
-            if (!this.state.editing) {
-                this.changeEditing(true);
-            }
-            this.setState({
-                animations,
-            });
-        },
-        onChangeStyles: (styles) => {
-            if (!this.state.editing) {
-                this.changeEditing(true);
-            }
-            this.setState({
-                styles,
-            });
-        },
-        onChangeDataSources: (dataSources) => {
-            if (!this.state.editing) {
-                this.changeEditing(true);
-            }
-            this.setState({
-                dataSources,
-            });
-        },
         onSaveImage: () => {
             this.canvasRef.handler.saveCanvasImage();
         },
@@ -632,9 +608,6 @@ class ImageMapEditor extends Component {
             selectedItem,
             zoomRatio,
             loading,
-            animations,
-            styles,
-            dataSources,
             editing,
             descriptors,
             showUrlModal,
@@ -659,9 +632,6 @@ class ImageMapEditor extends Component {
             onShowUrlModal,
             onUrlModalCancel,
             onUrlModalOk,
-            onChangeAnimations,
-            onChangeStyles,
-            onChangeDataSources,
             onSaveImage,
             onChangePage,
         } = this.handlers;
@@ -778,12 +748,6 @@ class ImageMapEditor extends Component {
                     canvasRef={this.canvasRef}
                     onChange={onChange}
                     selectedItem={selectedItem}
-                    onChangeAnimations={onChangeAnimations}
-                    onChangeStyles={onChangeStyles}
-                    onChangeDataSources={onChangeDataSources}
-                    animations={animations}
-                    styles={styles}
-                    dataSources={dataSources}
                 />
                 <ImageMapPreview ref={(c) => { this.preview = c; }} preview={preview} onChangePreview={onChangePreview} onTooltip={onTooltip} onClick={onClick} />
             </div>
