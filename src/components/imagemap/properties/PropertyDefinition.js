@@ -4,7 +4,6 @@ import StyleProperty from './StyleProperty';
 import ImageProperty from './ImageProperty';
 import TextProperty from './TextProperty';
 import MapProperty from './MapProperty';
-import ElementProperty from './ElementProperty';
 import ShadowProperty from './ShadowProperty';
 import ImageFilterProperty from './ImageFilterProperty';
 
@@ -175,10 +174,6 @@ export default {
         general: {
             title: 'General',
             component: GeneralProperty,
-        },
-        video: {
-            title: 'Element',
-            component: ElementProperty,
         },
     },
     svg: {
