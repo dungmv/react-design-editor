@@ -114,6 +114,20 @@ export default {
             component: ShadowProperty,
         },
     },
+    path: {
+        general: {
+            title: 'General',
+            component: GeneralProperty,
+        },
+        style: {
+            title: 'Style',
+            component: StyleProperty,
+        },
+        shadow: {
+            title: 'Shadow',
+            component: ShadowProperty,
+        },
+    },
     circle: {
         general: {
             title: 'General',

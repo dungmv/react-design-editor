@@ -38,7 +38,7 @@ const CanvasObject: CanvasObjectSchema = {
         create: (option: any) => new fabric.Rect(option),
     },
     path: {
-        create: (option: any) => new fabric.Path(null, option),
+        create: ({ path, ...option }: { path: any }) => new fabric.Path(path, option),
     },
     image: {
         create: ({ element = new Image(), ...option }) => new fabric.Image(element, {
