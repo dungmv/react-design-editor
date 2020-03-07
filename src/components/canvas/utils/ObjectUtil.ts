@@ -4,42 +4,6 @@ import { IFilter } from '../handlers/ImageHandler';
 
 export type AnimationType = 'fade' | 'bounce' | 'shake' | 'scaling' | 'rotation' | 'flash' | 'none';
 
-export interface AnimationProperty {
-    delay?: number;
-    duration?: number;
-    autoplay?: boolean;
-    loop?: boolean | number;
-    type: AnimationType;
-    offset?: number;
-    opacity?: number;
-    bounce?: 'vertical' | 'horizontal';
-    shake?: 'vertical' | 'horizontal';
-    scale?: number;
-    angle?: number;
-    fill?: string | fabric.Pattern;
-    stroke?: string;
-}
-
-export interface LinkProperty {
-    enabled?: boolean;
-    type?: 'resource' | 'alarm';
-    state?: 'new' | 'tab';
-    dashboard?: any;
-}
-
-export interface TooltipProperty {
-    enabled?: boolean;
-    type?: 'resource' | 'alarm';
-    template?: string;
-}
-
-export interface TriggerProperty {
-    enabled?: boolean;
-    type?: 'resource' | 'alarm';
-    script?: string;
-    effect?: 'style' | 'animation';
-}
-
 export interface FabricCanvasOption {
     wrapperEl?: HTMLElement;
 }
@@ -48,122 +12,87 @@ export type FabricCanvas<T extends any = fabric.Canvas> = T & FabricCanvasOption
 
 export type FabricObjectOption<T extends any = fabric.IObjectOptions> = T & {
     /**
-     * @description Object id
+     * Object id
      * @type {string}
      */
     id?: string;
     /**
-     * @description Parent object id
+     * Parent object id
      * @type {string}
      */
     parentId?: string;
     /**
-     * @description Original opacity
+     * Original opacity
      * @type {number}
      */
     originOpacity?: number;
     /**
-     * @description Original top position
+     * Original top position
      * @type {number}
      */
     originTop?: number;
     /**
-     * @description Original left position
+     * Original left position
      * @type {number}
      */
     originLeft?: number;
     /**
-     * @description Original scale X
+     * Original scale X
      * @type {number}
      */
     originScaleX?: number;
     /**
-     * @description Original scale Y
+     * Original scale Y
      * @type {number}
      */
     originScaleY?: number;
     /**
-     * @description Original angle
+     * Original angle
      * @type {number}
      */
     originAngle?: number;
     /**
-     * @description Original fill color
+     * Original fill color
      * @type {(string | fabric.Pattern)}
      */
     originFill?: string | fabric.Pattern;
     /**
-     * @description Original stroke color
+     * Original stroke color
      * @type {string}
      */
     originStroke?: string;
     /**
-     * @description Object editable
+     * Object editable
      * @type {boolean}
      */
     editable?: boolean;
-    /**
-     * @description Object Super type
-     * @type {string}
-     */
-    superType?: string;
     /**
      * @description
      * @type {string}
      */
     description?: string;
     /**
-     * @description Animation property
-     * @type {AnimationProperty}
-     */
-    animation?: AnimationProperty;
-    /**
-     * @description Anime instance
-     * @type {anime.AnimeInstance}
-     */
-    anime?: anime.AnimeInstance;
-    /**
-     * @description Trigger property
-     * @type {TriggerProperty}
-     */
-    trigger?: TriggerProperty;
-    /**
-     * @description Tooltip property
-     * @type {TooltipProperty}
-     */
-    tooltip?: TooltipProperty;
-    /**
-     * @description Link property
-     * @type {LinkProperty}
-     */
-    link?: LinkProperty;
-    /**
-     * @description Is running animation
-     * @type {boolean}
-     */
-    animating?: boolean;
-    /**
-     * @description Object class
+     * Object class
      * @type {string}
      */
     class?: string;
     /**
-     * @description Is possible delete
+     * Is possible delete
      * @type {boolean}
      */
     deletable?: boolean;
     /**
-     * @description Is enable double click
+     * Is enable double click
      * @type {boolean}
      */
     dblclick?: boolean;
     /**
-     * @description Is possible clone
+     * Is possible clone
      * @type {boolean}
      */
     cloneable?: boolean;
     /**
-     * @description Is locked object
+     * Is locked object
      * @type {boolean}
      */
     locked?: boolean;
@@ -173,76 +102,225 @@ export type FabricObjectOption<T extends any = fabric.IObjectOptions> = T & {
 export type FabricObject<T extends any = fabric.Object> = T & FabricObjectOption;
 
 export type FabricGroup = FabricObject<fabric.Group> & {
+    /**
+     * Object that config group
+     * @type {FabricObject[]}
+     */
     objects?: FabricObject[];
 };
 
 export type FabricImage = FabricObject & Omit<fabric.Image, 'filters'> & {
+    /**
+     * Image URL
+     * @type {string}
+     */
     src?: string;
+    /**
+     * Image File or Blob
+     * @type {File}
+     */
     file?: File;
+    /**
+     * Image Filter
+     * @type {IFilter[]}
+     */
     filters?: IFilter[];
 }
 
 export interface FabricElement extends FabricObject<fabric.Rect> {
+    /**
+     * Wrapped Element
+     * @type {HTMLDivElement}
+     */
     container: HTMLDivElement;
+    /**
+     * Target Element
+     * @type {HTMLDivElement}
+     */
     element: HTMLDivElement;
+    /**
+     * Source of Element Object
+     */
     setSource: (source: any) => void;
 }
 
 export type WorkareaLayout = 'fixed' | 'responsive' | 'fullscreen';
 
 export interface WorkareaOption {
+    /**
+     * Image URL
+     * @type {string}
+     */
     src?: string;
+    /**
+     * Image File or Blbo
+     * @type {File}
+     */
     file?: File;
+    /**
+     * Workarea Width
+     * @type {number}
+     */
     width?: number;
+    /**
+     * Workarea Height
+     * @type {number}
+     */
     height?: number;
+    /**
+     * Workarea Background Color
+     * @type {string}
+     */
     backgroundColor?: string;
+    /**
+     * Workarea Layout Type
+     * @type {WorkareaLayout}
+     */
     layout?: WorkareaLayout;
 }
 
 export type WorkareaObject = FabricImage & {
+    /**
+     * Workarea Layout Type
+     * @type {WorkareaLayout}
+     */
     layout?: WorkareaLayout;
-    _element?: HTMLImageElement;
-    isElement?: boolean;
+    /**
+     * Stored width in workarea
+     * @type {number}
+     */
     workareaWidth?: number;
+    /**
+     * Stored height in workarea
+     * @type {number}
+     */
     workareaHeight?: number;
 };
 
 export interface CanvasOption {
+    /**
+     * Unique id of Canvas
+     * @type {string}
+     */
     id?: string;
+    /**
+     * Indicates whether objects should remain in current stack position when selected. When false objects are brought to top and rendered as part of the selection group
+     * @type {boolean}
+     */
     preserveObjectStacking?: boolean;
+    /**
+     * Canvas width
+     * @type {number}
+     */
     width?: number;
+    /**
+     * Canvas height
+     * @type {number}
+     */
     height?: number;
+    /**
+     * Whether group selection should be enabled
+     * @type {boolean}
+     */
     selection?: boolean;
+    /**
+     * Default mouse cursor of Canvas
+     * @type {string}
+     */
     defaultCursor?: string;
+    /**
+     * Background color of Canvas
+     * @type {(string | fabric.Pattern)}
+     */
     backgroundColor?: string | fabric.Pattern;
 }
 
 export interface GridOption {
+    /**
+     * Whether should be enabled
+     * @type {boolean}
+     */
     enabled?: boolean;
+    /**
+     * Grid interval
+     * @type {number}
+     */
     grid?: number;
+    /**
+     * When had moved object, whether should adjust position on grid interval
+     * @type {boolean}
+     */
     snapToGrid?: boolean;
 }
 
 export interface GuidelineOption {
+    /**
+     * When have moved object, whether should show guideline
+     * @type {boolean}
+     */
     enabled?: boolean;
 }
 
 export interface KeyEvent {
+    /**
+     * Arrow key
+     * @type {boolean}
+     */
     move?: boolean;
+    /**
+     * Ctrl + A
+     * @type {boolean}
+     */
     all?: boolean;
+    /**
+     * Ctrl + C
+     * @type {boolean}
+     */
     copy?: boolean;
+    /**
+     * Ctrl + P
+     * @type {boolean}
+     */
     paste?: boolean;
+    /**
+     * Escape
+     * @type {boolean}
+     */
     esc?: boolean;
+    /**
+     * Delete or Backspace
+     * @type {boolean}
+     */
     del?: boolean;
+    /**
+     * When have copied object, whether should copy object option on clipboard
+     * @type {boolean}
+     */
     clipboard?: boolean;
+    /**
+     * Ctrl + Z, Ctrl + Y
+     * @type {boolean}
+     */
     transaction?: boolean;
+    /**
+     * Plus, Minus
+     *
+     * @type {boolean}
+     */
+    zoom?: boolean;
+    /**
+     * Ctrl + X
+     *
+     * @type {boolean}
+     */
+    cut?: boolean;
 }
 
-export type InteractionMode = 'selection' | 'grab' | 'polygon' | 'line' | 'arrow' | 'link' | 'crop';
+export type InteractionMode = 'selection' | 'grab' | 'polygon' | 'line' | 'crop';
 
 export interface FabricEvent<T extends any = Event> extends Omit<fabric.IEvent, 'e'> {
-	e: T;
-	target?: FabricObject;
+    e: T;
+    target?: FabricObject;
     subTargets?: FabricObject[],
 	button?: number;
 	isClick?: boolean;
@@ -251,6 +329,12 @@ export interface FabricEvent<T extends any = Event> extends Omit<fabric.IEvent, 
     transform?: { corner: string, original: FabricObject, originX: string, originY: string, width: number };
 }
 
+/**
+ * toObject util
+ * @param {*} obj
+ * @param {string[]} propertiesToInclude
+ * @param {{ [key: string]: any }} [properties]
+ */
 export const toObject = (obj: any, propertiesToInclude: string[], properties?: { [key: string]: any }) => fabric.util.object.extend(obj.callSuper('toObject'), propertiesToInclude.reduce((prev, property) => Object.assign(prev, {
     [property]: obj.get(property),
 }), Object.assign({}, properties)));

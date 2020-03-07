@@ -13,7 +13,7 @@ class DrawingHandler {
 
     polygon = {
         init: () => {
-            this.handler.modeHandler.drawing(null, 'polygon');
+            this.handler.interactionHandler.drawing('polygon');
             this.handler.pointArray = [];
             this.handler.lineArray = [];
             this.handler.activeLine = null;
@@ -33,7 +33,7 @@ class DrawingHandler {
             this.handler.activeLine = null;
             this.handler.activeShape = null;
             this.handler.canvas.renderAll();
-            this.handler.modeHandler.selection();
+            this.handler.interactionHandler.selection();
         },
         addPoint: (opt: FabricEvent) => {
             const { e, absolutePointer } = opt;
@@ -147,7 +147,7 @@ class DrawingHandler {
             this.handler.pointArray = [];
             this.handler.activeLine = null;
             this.handler.activeShape = null;
-            this.handler.modeHandler.selection();
+            this.handler.interactionHandler.selection();
         },
         // TODO... polygon resize
         // createResize: (target, points) => {
@@ -199,7 +199,7 @@ class DrawingHandler {
 
     line = {
         init: () => {
-            this.handler.modeHandler.drawing(null, 'line');
+            this.handler.interactionHandler.drawing('line');
             this.handler.pointArray = [];
             this.handler.activeLine = null;
         },
@@ -211,7 +211,7 @@ class DrawingHandler {
             this.handler.pointArray = [];
             this.handler.activeLine = null;
             this.handler.canvas.renderAll();
-            this.handler.modeHandler.selection();
+            this.handler.interactionHandler.selection();
         },
         addPoint: (opt: FabricEvent) => {
             const { absolutePointer } = opt;
@@ -278,76 +278,7 @@ class DrawingHandler {
             this.handler.add(option, false);
             this.handler.pointArray = [];
             this.handler.activeLine = null;
-            this.handler.modeHandler.selection();
-        },
-    }
-
-    arrow = {
-        init: () => {
-            this.handler.modeHandler.drawing(null, 'arrow');
-            this.handler.pointArray = [];
-            this.handler.activeLine = null;
-        },
-        finish: () => {
-            this.handler.pointArray.forEach(point => {
-                this.handler.canvas.remove(point);
-            });
-            this.handler.canvas.remove(this.handler.activeLine);
-            this.handler.pointArray = [];
-            this.handler.activeLine = null;
-            this.handler.canvas.renderAll();
-            this.handler.modeHandler.selection();
-        },
-        addPoint: (opt: FabricEvent) => {
-            const { absolutePointer } = opt;
-            const { x, y } = absolutePointer;
-            const circle = new fabric.Circle({
-                radius: 3,
-                fill: '#ffffff',
-                stroke: '#333333',
-                strokeWidth: 0.5,
-                left: x,
-                top: y,
-                selectable: false,
-                hasBorders: false,
-                hasControls: false,
-                originX: 'center',
-                originY: 'center',
-                hoverCursor: 'pointer',
-            });
-            if (!this.handler.pointArray.length) {
-                circle.set({
-                    fill: 'red',
-                });
-            }
-            this.handler.pointArray.push(circle);
-            this.handler.canvas.add(this.handler.activeLine);
-            this.handler.canvas.add(circle);
-        },
-        generate: (opt: FabricEvent) => {
-            const { absolutePointer } = opt;
-            const { x, y } = absolutePointer;
-            let points = [] as number[];
-            this.handler.pointArray.forEach(point => {
-                points = points.concat(point.left, point.top, x, y);
-                this.handler.canvas.remove(point);
-            });
-            this.handler.canvas.remove(this.handler.activeLine);
-            const option = {
-                id: uuid(),
-                points,
-                type: 'arrow',
-                stroke: 'rgba(0, 0, 0, 1)',
-                strokeWidth: 3,
-                opacity: 1,
-                objectCaching: !this.handler.editable,
-                name: 'New line',
-                superType: 'drawing',
-            };
-            this.handler.add(option, false);
-            this.handler.pointArray = [];
-            this.handler.activeLine = null;
-            this.handler.modeHandler.selection();
+            this.handler.interactionHandler.selection();
         },
     }
 

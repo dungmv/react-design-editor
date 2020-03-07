@@ -23,11 +23,6 @@ const defaultWorkareaOption: Partial<WorkareaObject> = {
     id: 'workarea',
     type: 'image',
     layout: 'fixed', // fixed, responsive, fullscreen
-    link: {},
-    tooltip: {
-        enabled: false,
-    },
-    isElement: false,
 };
 
 class WorkareaHandler {
@@ -39,7 +34,7 @@ class WorkareaHandler {
     }
 
     /**
-     * @description Init workarea
+     * Init workarea
      */
     public init = () => {
         const { workareaOption } = this.handler;
@@ -55,7 +50,7 @@ class WorkareaHandler {
     }
 
     /**
-     * @description Set the layout on workarea
+     * Set the layout on workarea
      * @param {WorkareaLayout} layout
      * @returns
      */
@@ -148,7 +143,7 @@ class WorkareaHandler {
     }
 
     /**
-     * @description Set the responsive image on Workarea
+     * Set the responsive image on Workarea
      * @param {string | File} [source]
      * @param {boolean} [loaded]
      * @returns
@@ -235,7 +230,7 @@ class WorkareaHandler {
     }
 
     /**
-     * @description Set the image on Workarea
+     * Set the image on Workarea
      * @param {string | File} source
      * @param {boolean} [loaded=false]
      * @returns

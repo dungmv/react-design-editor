@@ -11,7 +11,7 @@ class GridHandler {
     }
 
     /**
-     * @description Init grid
+     * Init grid
      */
     public init = () => {
         const { gridOption } = this.handler;
@@ -45,7 +45,7 @@ class GridHandler {
     }
 
     /**
-     * @description Set coords in grid
+     * Set coords in grid
      * @param {(FabricObject | fabric.ActiveSelection)} target
      * @returns
      */

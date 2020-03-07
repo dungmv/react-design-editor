@@ -3,13 +3,19 @@ import { fabric } from 'fabric';
 import Handler from './Handler';
 import { FabricObject, InteractionMode } from '../utils';
 
-class ModeHandler {
+type IReturnType = { selectable?: boolean, evented?: boolean } | boolean;
+
+class InteractionHandler {
     handler: Handler;
     constructor(handler: Handler) {
         this.handler = handler;
     }
 
-    public selection = (callback?: (obj: FabricObject) => any) => {
+    /**
+     * Change selection mode
+     * @param {(obj: FabricObject) => IReturnType} [callback]
+     */
+    public selection = (callback?: (obj: FabricObject) => IReturnType) => {
         if (this.handler.interactionMode === 'selection') {
             return;
         }
@@ -46,7 +52,11 @@ class ModeHandler {
         this.handler.canvas.renderAll();
     }
 
-    grab = (callback?: (obj: FabricObject) => any) => {
+    /**
+     * Change grab mode
+     * @param {(obj: FabricObject) => IReturnType} [callback]
+     */
+    public grab = (callback?: (obj: FabricObject) => IReturnType) => {
         if (this.handler.interactionMode === 'grab') {
             return;
         }
@@ -74,7 +84,15 @@ class ModeHandler {
         this.handler.canvas.renderAll();
     }
 
-    drawing = (callback?: (obj: FabricObject) => any, type?: InteractionMode) => {
+    /**
+     * Change drawing mode
+     * @param {InteractionMode} [type]
+     * @param {(obj: FabricObject) => IReturnType} [callback]
+     */
+    public drawing = (type?: InteractionMode, callback?: (obj: FabricObject) => IReturnType) => {
+        if (this.isDrawingMode()) {
+            return;
+        }
         this.handler.interactionMode = type;
         this.handler.canvas.selection = false;
         this.handler.canvas.defaultCursor = 'pointer';
@@ -99,10 +117,26 @@ class ModeHandler {
         this.handler.canvas.renderAll();
     }
 
-    moving = (e: any) => {
+    /**
+     * Moving objects in grap mode
+     * @param {MouseEvent} e
+     */
+    public moving = (e: MouseEvent) => {
+        if (this.isDrawingMode()) {
+            return;
+        }
         const delta = new fabric.Point(e.movementX, e.movementY);
         this.handler.canvas.relativePan(delta);
     }
+
+    /**
+     * Whether is drawing mode
+     * @returns
+     */
+    public isDrawingMode = () => {
+        return this.handler.interactionMode === 'line'
+        || this.handler.interactionMode === 'polygon';
+    }
 }
 
-export default ModeHandler;
+export default InteractionHandler;

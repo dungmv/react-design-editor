@@ -54,7 +54,7 @@ const CanvasObject: CanvasObjectSchema = {
     },
     line: {
         create: ({ points, ...option }: { points: any }) => new Line(points, option),
-    }
+    },
 };
 
 export default CanvasObject;

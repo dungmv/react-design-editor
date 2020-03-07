@@ -97,9 +97,6 @@ class ImageMapEditor extends Component {
         selectedPage: 0
     }
 
-    componentWillMount() {
-    }
-
     componentDidMount() {
         this.showLoading(true);
         import('./Descriptors.json').then((descriptors) => {
@@ -112,7 +109,7 @@ class ImageMapEditor extends Component {
         this.setState({
             selectedItem: null,
         });
-
+        this.shortcutHandlers.esc();
         let query = new URLSearchParams(window.location.search);
         if (query.has('design')) {
             let url = 'http://printshop.indyfriend.vn/decompress/' + query.get('design') + '?origin=true';
@@ -568,8 +565,6 @@ class ImageMapEditor extends Component {
                 if (e.keyCode === 27) {
                     this.handlers.onChangePreview(false);
                 }
-            }, {
-                once: true,
             });
         },
     }
