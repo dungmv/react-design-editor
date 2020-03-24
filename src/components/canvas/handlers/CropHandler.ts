@@ -6,11 +6,13 @@ import { FabricImage } from '../utils';
 class CropHandler {
     handler: Handler;
     cropRect: fabric.Rect;
+    cropRectPrev: fabric.Rect;
     cropObject: FabricImage;
 
     constructor(handler: Handler) {
         this.handler = handler;
         this.cropRect = null;
+        this.cropRectPrev = null;
         this.cropObject = null;
     }
 
@@ -36,23 +38,24 @@ class CropHandler {
         if (this.validType()) {
             this.handler.interactionMode = 'crop';
             this.cropObject = this.handler.canvas.getActiveObject() as FabricImage;
-            const { left, top } = this.cropObject;
             this.cropRect = new fabric.Rect({
-                width: this.cropObject.width,
-                height: this.cropObject.height,
-                scaleX: this.cropObject.scaleX,
-                scaleY: this.cropObject.scaleY,
+                angle: this.cropObject.angle,
+                left: this.cropObject.left,
+                top: this.cropObject.top,
                 originX: 'left',
                 originY: 'top',
-                left,
-                top,
                 hasRotatingPoint: false,
                 fill: 'rgba(0, 0, 0, 0.2)',
             });
+            this.cropRect.width = this.cropObject.width * this.cropObject.scaleX;
+            this.cropRect.height = this.cropObject.height * this.cropObject.scaleY;
+            this.cropRectPrev = this.cropObject.clipPath;
             this.handler.canvas.add(this.cropRect);
             this.handler.canvas.setActiveObject(this.cropRect);
             this.cropObject.selectable = false;
             this.cropObject.evented = false;
+            this.cropObject.dirty = true;
+            this.cropObject.clipPath = null;
             this.handler.canvas.renderAll();
         }
     }
@@ -62,20 +65,31 @@ class CropHandler {
      */
     public finish = () => {
         const { left, top, width, height, scaleX, scaleY } = this.cropRect;
-        const croppedImg = this.cropObject.toDataURL({
-            left: left - this.cropObject.left,
-            top: top - this.cropObject.top,
-            width: width * scaleX,
-            height: height * scaleY,
+        const diffLeft = left - this.cropObject.left;
+        const diffTop = top - this.cropObject.top;
+        this.cropObject.clipPath = new fabric.Rect({
+            left: diffLeft / this.cropObject.scaleX - this.cropObject.width / 2,
+            top: diffTop / this.cropObject.scaleY - this.cropObject.height / 2,
+            width: width * scaleX / this.cropObject.scaleX,
+            height: height * scaleY / this.cropObject.scaleY
         });
-        this.handler.setImage(this.cropObject, croppedImg);
-        this.cancel();
+        this.cropObject.dirty = true;
+        this.clean();
     }
 
     /**
      * Cancel crop
      */
     cancel = () => {
+        this.cropObject.clipPath = this.cropRectPrev;
+        this.cropObject.dirty = true;
+        this.clean();
+    }
+
+    /**
+     * clean up before close
+     */
+    clean = () => {
         this.handler.interactionMode = 'selection';
         this.cropObject.selectable = true;
         this.cropObject.evented = true;
@@ -83,6 +97,7 @@ class CropHandler {
         this.handler.canvas.remove(this.cropRect);
         this.cropRect = null;
         this.cropObject = null;
+        this.cropRectPrev = null;
         this.handler.canvas.renderAll();
     }
 

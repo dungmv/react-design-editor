@@ -112,11 +112,11 @@ class ImageMapEditor extends Component {
         this.shortcutHandlers.esc();
         let query = new URLSearchParams(window.location.search);
         if (query.has('design')) {
-            let url = 'http://printshop.indyfriend.vn/decompress/' + query.get('design') + '?origin=true';
+            let url = 'http://printshop.indy.vn/decompress/' + query.get('design') + '?origin=true';
             this.setState({tempUrl: url});
             this.handlers.loadFromUrl(url);
         } else if (query.has('product')) {
-            let url = 'http://printshop.indyfriend.vn/products/' + query.get('product') + '?origin=true';
+            let url = 'http://printshop.indy.vn/products/' + query.get('product') + '?origin=true';
             this.setState({tempUrl: url});
             this.handlers.loadFromUrl(url);
         }
@@ -456,7 +456,7 @@ class ImageMapEditor extends Component {
             let { tempUrl } = this.state;
             this.setState({showUrlModal: false});
             if (!(tempUrl.startsWith('https://') || tempUrl.startsWith('http://'))) {
-                tempUrl = 'http://printshop.indyfriend.vn/decompress/' + tempUrl + '?origin=true'
+                tempUrl = 'http://printshop.indy.vn/decompress/' + tempUrl + '?origin=true'
                 this.setState({tempUrl: tempUrl});
             }
             this.handlers.loadFromUrl(tempUrl);
@@ -487,7 +487,7 @@ class ImageMapEditor extends Component {
             for(let i = 0; i < fonts.length; i++) {
                 let p = new Promise((resolve, reject) => {
                     let fontData = fonts[i];
-                    var junction_font = new FontFace(fontData.font_name, 'url(https://cdn.indyfriend.vn/' + fontData.url + ')');
+                    var junction_font = new FontFace(fontData.font_name, 'url(https://cdn.indy.vn/' + fontData.url + ')');
                     junction_font.load().then((loaded_face) => {
                         document.fonts.add(loaded_face);
                         resolve();
