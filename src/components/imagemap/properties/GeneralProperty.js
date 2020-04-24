@@ -88,7 +88,7 @@ export default {
                     <Col span={12}>
                         <Form.Item label={i18n.t('common.scale-x')} colon={false}>
                             {
-                                getFieldDecorator('scale-x', {
+                                getFieldDecorator('scaleX', {
                                     rules: [{
                                         type: 'number',
                                         required: true,
@@ -104,7 +104,7 @@ export default {
                     <Col span={12}>
                         <Form.Item label={i18n.t('common.scale-y')} colon={false}>
                             {
-                                getFieldDecorator('scale-y', {
+                                getFieldDecorator('scaleY', {
                                     rules: [{
                                         type: 'number',
                                         required: true,
