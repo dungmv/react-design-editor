@@ -59,7 +59,7 @@ export default {
                                         message: 'Please input width',
                                         min: 1,
                                     }],
-                                    initialValue: parseInt(data.width * data.scaleX, 10),
+                                    initialValue: data.width,
                                 })(
                                     <InputNumber min={1} />,
                                 )
@@ -76,9 +76,43 @@ export default {
                                         message: 'Please input height',
                                         min: 1,
                                     }],
-                                    initialValue: parseInt(data.height * data.scaleY, 10),
+                                    initialValue: data.height,
                                 })(
                                     <InputNumber min={1} />,
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={12}>
+                        <Form.Item label={i18n.t('common.scale-x')} colon={false}>
+                            {
+                                getFieldDecorator('scale-x', {
+                                    rules: [{
+                                        type: 'number',
+                                        required: true,
+                                        message: 'Please input scale x',
+                                    }],
+                                    initialValue: data.scaleX,
+                                })(
+                                    <InputNumber />,
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label={i18n.t('common.scale-y')} colon={false}>
+                            {
+                                getFieldDecorator('scale-y', {
+                                    rules: [{
+                                        type: 'number',
+                                        required: true,
+                                        message: 'Please input scale y',
+                                    }],
+                                    initialValue: data.scaleY,
+                                })(
+                                    <InputNumber />,
                                 )
                             }
                         </Form.Item>

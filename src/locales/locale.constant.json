@@ -138,6 +138,8 @@
         "description": "Description",
         "width": "Width",
         "height": "Height",
+        "scale-x": "Scale X",
+        "scale-y": "Scale Y",
         "icon": "Icon",
         "locked": "Lock",
         "visible": "Visible",
