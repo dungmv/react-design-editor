@@ -4,45 +4,45 @@ import Handler from './Handler';
 import { FabricObject } from '../utils';
 
 class GridHandler {
-    handler?: Handler;
+	handler?: Handler;
 
-    constructor(handler: Handler) {
-        this.handler = handler;
-    }
+	constructor(handler: Handler) {
+		this.handler = handler;
+	}
 
-    /**
-     * Init grid
-     */
-    public init = () => {
-        const { gridOption } = this.handler;
-        if (gridOption.enabled && gridOption.grid) {
-            const width = 5000;
-            const gridLength = width / gridOption.grid;
-            const lineOptions = {
-                stroke: '#ebebeb',
-                selectable: false,
-                evented: false,
-                id: 'grid',
-            };
-            for (let i = 0; i < gridLength; i++) {
-                const distance = i * gridOption.grid;
-                const fhorizontal = new fabric.Line([distance, -width, distance, width], lineOptions);
-                const shorizontal = new fabric.Line([distance - width, -width, distance - width, width], lineOptions);
-                this.handler.canvas.add(fhorizontal);
-                this.handler.canvas.add(shorizontal);
-                const fvertical = new fabric.Line([-width, distance - width, width, distance - width], lineOptions);
-                const svertical = new fabric.Line([-width, distance, width, distance], lineOptions);
-                this.handler.canvas.add(fvertical);
-                this.handler.canvas.add(svertical);
-                if (i % 5 === 0) {
-                    fhorizontal.set({ stroke: '#cccccc' });
-                    shorizontal.set({ stroke: '#cccccc' });
-                    fvertical.set({ stroke: '#cccccc' });
-                    svertical.set({ stroke: '#cccccc' });
-                }
-            }
-        }
-    }
+	/**
+	 * Init grid
+	 */
+	public init = () => {
+		const { grid, lineColor, borderColor, enabled } = this.handler.gridOption;
+		if (enabled && grid) {
+			const width = 5000;
+			const gridLength = width / grid;
+			const lineOptions = {
+				stroke: lineColor,
+				selectable: false,
+				evented: false,
+				id: 'grid',
+			};
+			for (let i = 0; i < gridLength; i++) {
+				const distance = i * grid;
+				const fhorizontal = new fabric.Line([distance, -width, distance, width], lineOptions);
+				const shorizontal = new fabric.Line([distance - width, -width, distance - width, width], lineOptions);
+				this.handler.canvas.add(fhorizontal);
+				this.handler.canvas.add(shorizontal);
+				const fvertical = new fabric.Line([-width, distance - width, width, distance - width], lineOptions);
+				const svertical = new fabric.Line([-width, distance, width, distance], lineOptions);
+				this.handler.canvas.add(fvertical);
+				this.handler.canvas.add(svertical);
+				if (i % 5 === 0) {
+					fhorizontal.set({ stroke: borderColor });
+					shorizontal.set({ stroke: borderColor });
+					fvertical.set({ stroke: borderColor });
+					svertical.set({ stroke: borderColor });
+				}
+			}
+		}
+	};
 
     /**
      * Set coords in grid

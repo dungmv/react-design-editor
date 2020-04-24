@@ -25,9 +25,6 @@ const propertiesToInclude = [
     'locked',
     'file',
     'src',
-    'link',
-    'tooltip',
-    'animation',
     'layout',
     'workareaWidth',
     'workareaHeight',
@@ -38,8 +35,6 @@ const propertiesToInclude = [
     'loop',
     'code',
     'icon',
-    'userProperty',
-    'trigger',
     'configuration',
     'superType',
     'points',
@@ -52,32 +47,9 @@ const defaultOption = {
     stroke: 'rgba(255, 255, 255, 0)',
     strokeUniform: true,
     resource: {},
-    link: {
-        enabled: false,
-        type: 'resource',
-        state: 'new',
-        dashboard: {},
-    },
-    tooltip: {
-        enabled: true,
-        type: 'resource',
-        template: '<div>{{message.name}}</div>',
-    },
-    animation: {
-        type: 'none',
-        loop: true,
-        autoplay: true,
-        delay: 100,
-        duration: 1000,
-    },
-    userProperty: {},
-    trigger: {
-        enabled: false,
-        type: 'alarm',
-        script: 'return message.value > 0;',
-        effect: 'style',
-    },
 };
+
+const printshop_url = 'http://printshop.indy.vn';
 
 class ImageMapEditor extends Component {
     state = {
@@ -91,7 +63,7 @@ class ImageMapEditor extends Component {
         dataSources: [],
         editing: false,
         showUrlModal: false,
-        tempUrl: '',
+        url: '',
         descriptors: {},
         pages: [],
         selectedPage: 0
@@ -110,14 +82,12 @@ class ImageMapEditor extends Component {
             selectedItem: null,
         });
         this.shortcutHandlers.esc();
-        let query = new URLSearchParams(window.location.search);
-        if (query.has('design')) {
-            let url = 'http://printshop.indy.vn/decompress/' + query.get('design') + '?origin=true';
-            this.setState({tempUrl: url});
+        let params = new URLSearchParams(window.location.search);
+        if (params.has('design')) {
+            let url = printshop_url + '/decompress/' + params.get('design') + '?origin=true';
             this.handlers.loadFromUrl(url);
-        } else if (query.has('product')) {
-            let url = 'http://printshop.indy.vn/products/' + query.get('product') + '?origin=true';
-            this.setState({tempUrl: url});
+        } else if (params.has('product')) {
+            let url = printshop_url + '/products/' + params.get('product') + '?origin=true';
             this.handlers.loadFromUrl(url);
         }
     }
@@ -137,10 +107,7 @@ class ImageMapEditor extends Component {
         },
         onSelect: (target) => {
             const { selectedItem } = this.state;
-            if (target
-            && target.id
-            && target.id !== 'workarea'
-            && target.type !== 'activeSelection') {
+            if (target && target.id && target.id !== 'workarea' && target.type !== 'activeSelection') {
                 if (selectedItem && target.id === selectedItem.id) {
                     return;
                 }
@@ -204,21 +171,6 @@ class ImageMapEditor extends Component {
                 }
                 return;
             }
-            if (changedKey === 'link') {
-                const link = Object.assign({}, defaultOption.link, allValues.link);
-                this.canvasRef.handler.set(changedKey, link);
-                return;
-            }
-            if (changedKey === 'tooltip') {
-                const tooltip = Object.assign({}, defaultOption.tooltip, allValues.tooltip);
-                this.canvasRef.handler.set(changedKey, tooltip);
-                return;
-            }
-            if (changedKey === 'animation') {
-                const animation = Object.assign({}, defaultOption.animation, allValues.animation);
-                this.canvasRef.handler.set(changedKey, animation);
-                return;
-            }
             if (changedKey === 'icon') {
                 const { unicode, styles } = changedValue[Object.keys(changedValue)[0]];
                 const uni = parseInt(unicode, 16);
@@ -260,11 +212,6 @@ class ImageMapEditor extends Component {
             }
             if (changedKey === 'textAlign') {
                 this.canvasRef.handler.set(changedKey, Object.keys(changedValue)[0]);
-                return;
-            }
-            if (changedKey === 'trigger') {
-                const trigger = Object.assign({}, defaultOption.trigger, allValues.trigger);
-                this.canvasRef.handler.set(changedKey, trigger);
                 return;
             }
             if (changedKey === 'filters') {
@@ -453,13 +400,12 @@ class ImageMapEditor extends Component {
             });
         },
         onUrlModalOk: () => {
-            let { tempUrl } = this.state;
+            let { url } = this.state;
             this.setState({showUrlModal: false});
-            if (!(tempUrl.startsWith('https://') || tempUrl.startsWith('http://'))) {
-                tempUrl = 'http://printshop.indy.vn/decompress/' + tempUrl + '?origin=true'
-                this.setState({tempUrl: tempUrl});
+            if (!(url.startsWith('https://') || url.startsWith('http://'))) {
+                url = printshop_url + '/decompress/' + url + '?origin=true'
             }
-            this.handlers.loadFromUrl(tempUrl);
+            this.handlers.loadFromUrl(url);
         },
         onUrlModalCancel: () => {
             this.setState({
@@ -473,6 +419,7 @@ class ImageMapEditor extends Component {
         },
         loadFromUrl: (url) => {
             this.showLoading(true);
+            this.setState({url: url});
             axios.get(url).then(res => {
                 this.showLoading(false);
                 this.handlers.loadFonts(res.data.fonts).then((values) => {
@@ -487,7 +434,7 @@ class ImageMapEditor extends Component {
             for(let i = 0; i < fonts.length; i++) {
                 let p = new Promise((resolve, reject) => {
                     let fontData = fonts[i];
-                    var junction_font = new FontFace(fontData.font_name, 'url(https://cdn.indy.vn/' + fontData.url + ')');
+                    var junction_font = new FontFace(fontData.font_name, 'url(https://cdn.indyfriend.vn/' + fontData.url + ')');
                     junction_font.load().then((loaded_face) => {
                         document.fonts.add(loaded_face);
                         resolve();
@@ -671,7 +618,7 @@ class ImageMapEditor extends Component {
                     visible={showUrlModal}
                 >
                     <Form.Item label={i18n.t('common.url')} colon={false}>
-                        <Input defaultValue={this.state.tempUrl} onChange={(e) => { this.setState({ tempUrl: e.target.value }); }}  />
+                        <Input defaultValue={this.state.url} onChange={(e) => { this.setState({ url: e.target.value }); }}  />
                     </Form.Item>
                 </Modal>
             </React.Fragment>

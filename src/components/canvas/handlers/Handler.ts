@@ -1,6 +1,6 @@
 import { fabric } from 'fabric';
 import warning from 'warning';
-import uuid from 'uuid';
+import { v4 } from 'uuid';
 
 import {
     ImageHandler,
@@ -18,19 +18,19 @@ import {
     ShortcutHandler,
 } from '.';
 import {
-    FabricObject,
-    FabricImage,
-    WorkareaObject,
-    WorkareaOption,
-    InteractionMode,
-    CanvasOption,
-    GridOption,
-    GuidelineOption,
-    KeyEvent,
-    FabricObjectOption,
-    FabricElement,
-    FabricCanvas,
-    FabricGroup,
+	FabricObject,
+	FabricImage,
+	WorkareaObject,
+	WorkareaOption,
+	InteractionMode,
+	CanvasOption,
+	GridOption,
+	GuidelineOption,
+	KeyEvent,
+	FabricObjectOption,
+	FabricElement,
+	FabricCanvas,
+	FabricGroup,
 } from '../utils';
 import CanvasObject from '../CanvasObject';
 import { TransactionEvent } from './TransactionHandler';
@@ -759,7 +759,7 @@ class Handler implements HandlerOptions {
                 const activeSelection = clonedObj as fabric.ActiveSelection;
                 activeSelection.canvas = this.canvas;
                 activeSelection.forEachObject((obj: any) => {
-                    obj.set('id', uuid());
+                    obj.set('id', v4());
                     this.canvas.add(obj);
                     this.objects = this.getObjects();
                     if (obj.dblclick) {
@@ -772,7 +772,7 @@ class Handler implements HandlerOptions {
                 activeSelection.setCoords();
             } else {
                 if (activeObject.id === clonedObj.id) {
-                    clonedObj.set('id', uuid());
+                    clonedObj.set('id', v4());
                 }
                 this.canvas.add(clonedObj);
                 this.objects = this.getObjects();
@@ -804,7 +804,7 @@ class Handler implements HandlerOptions {
                 cloned.set({
                     left: cloned.left + grid,
                     top: cloned.top + grid,
-                    id: uuid(),
+                    id: v4(),
                     evented: true,
                 });
                 this.canvas.add(cloned);
@@ -890,13 +890,13 @@ class Handler implements HandlerOptions {
             clonedObj.set({
                 left: clonedObj.left + padding,
                 top: clonedObj.top + padding,
-                id: isCut ? clonedObj.id : uuid(),
+                id: isCut ? clonedObj.id : v4(),
                 evented: true,
             });
             if (clonedObj.type === 'activeSelection') {
                 clonedObj.canvas = this.canvas;
                 clonedObj.forEachObject((obj: any) => {
-                    obj.set('id', isCut ? obj.id : uuid());
+                    obj.set('id', isCut ? obj.id : v4());
                     this.canvas.add(obj);
                     if (obj.dblclick) {
                         obj.on('mousedblclick', this.eventHandler.object.mousedblclick);
@@ -1222,7 +1222,7 @@ class Handler implements HandlerOptions {
         }
         const group = activeObject.toGroup() as any;
         group.set({
-            id: uuid(),
+            id: v4(),
             name: 'New group',
             type: 'group',
             ...this.defaultOption,
