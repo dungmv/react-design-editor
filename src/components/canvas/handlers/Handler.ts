@@ -1116,23 +1116,23 @@ class Handler implements HandlerOptions {
         });
     }
 
-    /**
-     * When set the width, height, Adjust the size
-     * @param {number} width
-     * @param {number} height
-     */
-    public scaleToResize = (width: number, height: number) => {
-        const activeObject = this.canvas.getActiveObject() as FabricObject;
-        const { id } = activeObject;
-        const obj = {
-            id,
-            scaleX: width / activeObject.width,
-            scaleY: height / activeObject.height,
-        };
-        this.setObject(obj);
-        activeObject.setCoords();
-        this.canvas.requestRenderAll();
-    }
+    // /**
+    //  * When set the width, height, Adjust the size
+    //  * @param {number} width
+    //  * @param {number} height
+    //  */
+    // public scaleToResize = (width: number, height: number) => {
+    //     const activeObject = this.canvas.getActiveObject() as FabricObject;
+    //     const { id } = activeObject;
+    //     const obj = {
+    //         id,
+    //         scaleX: width / activeObject.width,
+    //         scaleY: height / activeObject.height,
+    //     };
+    //     this.setObject(obj);
+    //     activeObject.setCoords();
+    //     this.canvas.requestRenderAll();
+    // }
 
     /**
      * Import json

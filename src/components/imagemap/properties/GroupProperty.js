@@ -28,7 +28,7 @@ export default {
                                         required: true,
                                         message: 'Please input width',
                                     }],
-                                    initialValue: data.width * data.scaleX,
+                                    initialValue: data.width,
                                 })(
                                     <InputNumber />,
                                 )
@@ -43,7 +43,39 @@ export default {
                                         required: true,
                                         message: 'Please input height',
                                     }],
-                                    initialValue: data.height * data.scaleY,
+                                    initialValue: data.height,
+                                })(
+                                    <InputNumber />,
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={12}>
+                        <Form.Item label="Scale X" colon={false}>
+                            {
+                                getFieldDecorator('scaleX', {
+                                    rules: [{
+                                        required: true,
+                                        message: 'Please input scale x',
+                                    }],
+                                    initialValue: data.scaleX,
+                                })(
+                                    <InputNumber />,
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Scale Y" colon={false}>
+                            {
+                                getFieldDecorator('scaleY', {
+                                    rules: [{
+                                        required: true,
+                                        message: 'Please input scale y',
+                                    }],
+                                    initialValue: data.scaleY,
                                 })(
                                     <InputNumber />,
                                 )

@@ -96,7 +96,7 @@ export default {
                                     }],
                                     initialValue: data.scaleX,
                                 })(
-                                    <InputNumber />,
+                                    <InputNumber step={0.1} />,
                                 )
                             }
                         </Form.Item>
@@ -112,7 +112,7 @@ export default {
                                     }],
                                     initialValue: data.scaleY,
                                 })(
-                                    <InputNumber />,
+                                    <InputNumber step={0.1} />,
                                 )
                             }
                         </Form.Item>

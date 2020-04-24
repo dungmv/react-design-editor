@@ -150,10 +150,10 @@ class ImageMapEditor extends Component {
                 this.canvasHandlers.onChangeWokarea(changedKey, changedValue, allValues.workarea);
                 return;
             }
-            if (changedKey === 'width' || changedKey === 'height') {
-                this.canvasRef.handler.scaleToResize(allValues.width, allValues.height);
-                return;
-            }
+            // if (changedKey === 'width' || changedKey === 'height') {
+            //     this.canvasRef.handler.scaleToResize(allValues.width, allValues.height);
+            //     return;
+            // }
             if (changedKey === 'locked') {
                 this.canvasRef.handler.setObject({
                     lockMovementX: changedValue,
