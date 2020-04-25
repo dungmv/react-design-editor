@@ -949,7 +949,8 @@ class Handler implements HandlerOptions {
                 this.canvas.renderAll();
                 return;
             }
-            obj.setElement(source);
+            const { filters = [], ...option } = obj;
+            obj.setElement(source, option);
             obj.setCoords();
             this.canvas.renderAll();
         });
@@ -1136,6 +1137,7 @@ class Handler implements HandlerOptions {
     public importJSON = (json: any, callback?: (canvas: FabricCanvas) => void) => {
         let prevLeft = 0;
         let prevTop = 0;
+        this.canvas.setZoom(1);
         this.canvas.setBackgroundColor(this.canvasOption.backgroundColor, this.canvas.renderAll.bind(this.canvas));
         const workareaExist = json.filter((obj: FabricObjectOption) => obj.id === 'workarea');
         if (!this.workarea) {
@@ -1155,6 +1157,7 @@ class Handler implements HandlerOptions {
             this.workareaHandler.setImage(workarea.src, true);
             this.workarea.setCoords();
         }
+        
         setTimeout(() => {
             json.forEach((obj: FabricObjectOption) => {
                 if (obj.id === 'workarea') {
@@ -1194,7 +1197,6 @@ class Handler implements HandlerOptions {
                 callback(this.canvas);
             }
         }, 300);
-        this.canvas.setZoom(1);
     }
 
     /**
