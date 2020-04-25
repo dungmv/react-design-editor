@@ -186,6 +186,16 @@ export type WorkareaObject = FabricImage & {
      */
     layout?: WorkareaLayout;
     /**
+     * Workarea Image Element
+     * @type {HTMLImageElement}
+     */
+    _element?: HTMLImageElement;
+    /**
+     * Whether exist the element
+     * @type {boolean}
+     */
+    isElement?: boolean;
+    /**
      * Stored width in workarea
      * @type {number}
      */
@@ -251,6 +261,18 @@ export interface GridOption {
      * @type {boolean}
      */
     snapToGrid?: boolean;
+    /**
+     * Grid line color
+     *
+     * @type {string}
+     */
+    lineColor?: string;
+    /**
+     * Grid border color
+     *
+     * @type {string}
+     */
+    borderColor?: string;
 }
 
 export interface GuidelineOption {
@@ -321,12 +343,12 @@ export type InteractionMode = 'selection' | 'grab' | 'polygon' | 'line' | 'crop'
 export interface FabricEvent<T extends any = Event> extends Omit<fabric.IEvent, 'e'> {
     e: T;
     target?: FabricObject;
-    subTargets?: FabricObject[],
-	button?: number;
-	isClick?: boolean;
-	pointer?: fabric.Point;
-	absolutePointer?: fabric.Point;
-    transform?: { corner: string, original: FabricObject, originX: string, originY: string, width: number };
+    subTargets?: FabricObject[];
+    button?: number;
+    isClick?: boolean;
+    pointer?: fabric.Point;
+    absolutePointer?: fabric.Point;
+    transform?: { corner: string; original: FabricObject; originX: string; originY: string; width: number };
 }
 
 /**
@@ -335,6 +357,14 @@ export interface FabricEvent<T extends any = Event> extends Omit<fabric.IEvent, 
  * @param {string[]} propertiesToInclude
  * @param {{ [key: string]: any }} [properties]
  */
-export const toObject = (obj: any, propertiesToInclude: string[], properties?: { [key: string]: any }) => fabric.util.object.extend(obj.callSuper('toObject'), propertiesToInclude.reduce((prev, property) => Object.assign(prev, {
-    [property]: obj.get(property),
-}), Object.assign({}, properties)));
+export const toObject = (obj: any, propertiesToInclude: string[], properties?: { [key: string]: any }) =>
+	fabric.util.object.extend(
+		obj.callSuper('toObject'),
+		propertiesToInclude.reduce(
+			(prev, property) =>
+				Object.assign(prev, {
+					[property]: obj.get(property),
+				}),
+			Object.assign({}, properties),
+		),
+	);
