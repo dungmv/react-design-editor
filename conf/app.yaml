@@ -1,0 +1,7 @@
+app:
+    port: 8800
+    host: localhost
+
+server:
+    http: http://localhost
+    ws: ws://localhost

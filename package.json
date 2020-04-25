@@ -38,13 +38,13 @@
 	},
 	"homepage": "https://salgum1114.github.io/react-design-editor",
 	"peerDependencies": {
-		"@types/animejs": "^3.1.0",
-		"@types/fabric": "^3.0.1",
 		"animejs": "^3.0.0",
 		"fabric": "^3.4.0",
 		"react": "^16.4.1",
 		"react-dom": "^16.4.1",
-		"react-dom-factories": "^1.0.2"
+		"react-dom-factories": "^1.0.2",
+		"@types/fabric": "^3.0.1",
+		"@types/animejs": "^3.1.0"
 	},
 	"dependencies": {
 		"animejs": "^3.0.0",

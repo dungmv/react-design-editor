@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Badge, Button, Popconfirm, Menu, Form, Modal, Input } from 'antd';
 import debounce from 'lodash/debounce';
 import i18n from 'i18next';
-import uuid from 'uuid/v4';
+import { v4 } from 'uuid';
 import axios from 'axios';
 
 import ImageMapFooterToolbar from './ImageMapFooterToolbar';
@@ -465,7 +465,7 @@ class ImageMapEditor extends Component {
                 this.canvasRef.handler.clear(true);
                 const data = objects.filter((obj) => {
                     if (!obj.id) {
-                        obj.id = uuid()
+                        obj.id = v4()
                         // return false;
                     }
                     return true;
