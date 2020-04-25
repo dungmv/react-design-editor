@@ -253,19 +253,6 @@ class ImageMapEditor extends Component {
                 this.canvasRef.handler.imageHandler.applyFilterByType(filterKey, changedValue[filterKey]);
                 return;
             }
-            if (changedKey === 'chartOption') {
-                try {
-                    const sandbox = new SandBox();
-                    const compiled = sandbox.compile(changedValue);
-                    const { animations, styles } = this.state;
-                    const chartOption = compiled(3, animations, styles, selectedItem.userProperty);
-                    selectedItem.setChartOptionStr(changedValue);
-                    this.canvasRef.handler.elementHandler.setById(selectedItem.id, chartOption);
-                } catch (error) {
-                    console.error(error);
-                }
-                return;
-            }
             this.canvasRef.handler.set(changedKey, changedValue);
         },
         onChangeWokarea: (changedKey, changedValue, allValues) => {
@@ -287,7 +274,7 @@ class ImageMapEditor extends Component {
         },
         onTooltip: (ref, target) => {
             const value = (Math.random() * 10) + 1;
-            const { animations, styles } = this.state;
+            // const { animations, styles } = this.state;
             // const { code } = target.trigger;
             // const compile = SandBox.compile(code);
             // const result = compile(value, animations, styles, target.userProperty);
@@ -402,7 +389,7 @@ class ImageMapEditor extends Component {
         onUrlModalOk: () => {
             let { url } = this.state;
             this.setState({showUrlModal: false});
-            if (!(url.startsWith('https://') || url.startsWith('http://'))) {
+            if (!url.match('^http[s]?://')) {
                 url = printshop_url + '/decompress/' + url + '?origin=true'
             }
             this.handlers.loadFromUrl(url);
