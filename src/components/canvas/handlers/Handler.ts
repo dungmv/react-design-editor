@@ -1382,8 +1382,14 @@ class Handler implements HandlerOptions {
      * Save canvas as image
      * @param {string} [option={ name: 'New Image', format: 'png', quality: 1, multiplier: 1 }]
      */
-    public saveCanvasImage = (option = { name: 'New Image', format: 'png', quality: 1, multiplier: 1 }) => {
-        const dataUrl = this.canvas.toDataURL(option);
+    public saveCanvasImage = (option = { name: 'Image', format: 'png', quality: 1, multiplier: 300 / 72 }) => {
+        const viewport = {
+            width: this.workarea.width,
+            height: this.workarea.height,
+            top: this.workarea.top,
+            left: this.workarea.left,
+        }
+        const dataUrl = this.canvas.toDataURL({...viewport, ...option});
         if (dataUrl) {
             const anchorEl = document.createElement('a');
             anchorEl.href = dataUrl;
