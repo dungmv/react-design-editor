@@ -10,12 +10,11 @@ class ImageMapPreview extends Component {
     static propTypes = {
         preview: PropTypes.bool,
         onChangePreview: PropTypes.func,
-        onTooltip: PropTypes.func,
         onAction: PropTypes.func,
     }
 
     render() {
-        const { onChangePreview, onTooltip, onClick, preview } = this.props;
+        const { onChangePreview, onClick, preview } = this.props;
         const previewClassName = classnames('rde-preview', { preview });
         return (
             <div className={previewClassName}>
@@ -26,7 +25,6 @@ class ImageMapPreview extends Component {
                         canvasOption={{
                             backgroundColor: '#f3f3f3',
                         }}
-                        onTooltip={onTooltip}
                         onClick={onClick}
                     />
                     <Button className="rde-action-btn rde-preview-close-btn" onClick={onChangePreview}>

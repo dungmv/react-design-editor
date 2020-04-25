@@ -146,10 +146,6 @@ export interface HandlerOptions {
      */
     onContext?: (el: HTMLDivElement, e: React.MouseEvent, target?: FabricObject) => Promise<any> | any;
     /**
-     * Return tooltip element
-     */
-    onTooltip?: (el: HTMLDivElement, target?: FabricObject) => Promise<any> | any;
-    /**
      * When zoom, Called function
      */
     onZoom?: (zoomRatio: number) => void;
@@ -216,7 +212,6 @@ class Handler implements HandlerOptions {
 
     public onAdd?: (object: FabricObject) => void;
     public onContext?: (el: HTMLDivElement, e: React.MouseEvent, target?: FabricObject) => Promise<any>;
-    public onTooltip?: (el: HTMLDivElement, target?: FabricObject) => Promise<any>;
     public onZoom?: (zoomRatio: number) => void;
     public onClick?: (canvas: FabricCanvas, target: FabricObject) => void;
     public onDblClick?: (canvas: FabricCanvas, target: FabricObject) => void;
@@ -293,7 +288,6 @@ class Handler implements HandlerOptions {
      */
     public initCallback = (options: HandlerOptions) => {
         this.onAdd = options.onAdd;
-        this.onTooltip = options.onTooltip;
         this.onZoom = options.onZoom;
         this.onContext = options.onContext;
         this.onClick = options.onClick;

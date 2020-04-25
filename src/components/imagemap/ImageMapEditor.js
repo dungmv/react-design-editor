@@ -11,7 +11,6 @@ import ImageMapTitle from './ImageMapTitle';
 import ImageMapHeaderToolbar from './ImageMapHeaderToolbar';
 import ImageMapPreview from './ImageMapPreview';
 import ImageMapConfigurations from './ImageMapConfigurations';
-import SandBox from '../sandbox/SandBox';
 
 import '../../libs/fontawesome-5.2.0/css/all.css';
 import '../../styles/index.less';
@@ -272,26 +271,6 @@ class ImageMapEditor extends Component {
             this.canvasRef.handler.workarea.set(changedKey, changedValue);
             this.canvasRef.canvas.requestRenderAll();
         },
-        onTooltip: (ref, target) => {
-            const value = (Math.random() * 10) + 1;
-            // const { animations, styles } = this.state;
-            // const { code } = target.trigger;
-            // const compile = SandBox.compile(code);
-            // const result = compile(value, animations, styles, target.userProperty);
-            // console.log(result);
-            return (
-                <div>
-                    <div>
-                        <div>
-                            <Button>
-                                {target.id}
-                            </Button>
-                        </div>
-                        <Badge count={value} />
-                    </div>
-                </div>
-            );
-        },
         onClick: (canvas, target) => {
             const { link } = target;
             if (link.state === 'current') {
@@ -538,7 +517,6 @@ class ImageMapEditor extends Component {
             onModified,
             onChange,
             onZoom,
-            onTooltip,
             onClick,
             onContext,
             onTransaction,
@@ -648,7 +626,6 @@ class ImageMapEditor extends Component {
                             onRemove={onRemove}
                             onSelect={onSelect}
                             onZoom={onZoom}
-                            onTooltip={onTooltip}
                             onClick={onClick}
                             onContext={onContext}
                             onTransaction={onTransaction}
@@ -666,7 +643,7 @@ class ImageMapEditor extends Component {
                     onChange={onChange}
                     selectedItem={selectedItem}
                 />
-                <ImageMapPreview ref={(c) => { this.preview = c; }} preview={preview} onChangePreview={onChangePreview} onTooltip={onTooltip} onClick={onClick} />
+                <ImageMapPreview ref={(c) => { this.preview = c; }} preview={preview} onChangePreview={onChangePreview} onClick={onClick} />
             </div>
         );
         return (
