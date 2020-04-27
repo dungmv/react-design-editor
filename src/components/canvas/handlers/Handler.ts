@@ -1111,24 +1111,6 @@ class Handler implements HandlerOptions {
         });
     }
 
-    // /**
-    //  * When set the width, height, Adjust the size
-    //  * @param {number} width
-    //  * @param {number} height
-    //  */
-    // public scaleToResize = (width: number, height: number) => {
-    //     const activeObject = this.canvas.getActiveObject() as FabricObject;
-    //     const { id } = activeObject;
-    //     const obj = {
-    //         id,
-    //         scaleX: width / activeObject.width,
-    //         scaleY: height / activeObject.height,
-    //     };
-    //     this.setObject(obj);
-    //     activeObject.setCoords();
-    //     this.canvas.requestRenderAll();
-    // }
-
     /**
      * Import json
      * @param {*} json
@@ -1389,6 +1371,13 @@ class Handler implements HandlerOptions {
             top: this.workarea.top,
             left: this.workarea.left,
         }
+        this.canvas.getObjects().forEach((el: FabricObject) => {
+            if(el.id == 'workarea') {
+                el.visible = false;
+            }
+        });
+        this.canvas.renderAll();
+
         const dataUrl = this.canvas.toDataURL({...viewport, ...option});
         if (dataUrl) {
             const anchorEl = document.createElement('a');
@@ -1398,6 +1387,12 @@ class Handler implements HandlerOptions {
             anchorEl.click();
             anchorEl.remove();
         }
+        this.canvas.getObjects().forEach((el: FabricObject) => {
+            if(el.id == 'workarea') {
+                el.visible = true;
+            }
+        });
+        this.canvas.renderAll();
     }
 }
 
