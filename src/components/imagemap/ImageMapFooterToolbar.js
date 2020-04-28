@@ -54,6 +54,7 @@ class ImageMapFooterToolbar extends Component {
             }
             this.forceUpdate();
             this.setState({ interactionMode: 'selection' });
+            this.props.canvasRef.handler.interactionHandler.selection();
         },
         grab: () => {
             if (this.props.canvasRef.handler.interactionHandler.isDrawingMode()) {
@@ -61,6 +62,7 @@ class ImageMapFooterToolbar extends Component {
             }
             this.forceUpdate();
             this.setState({ interactionMode: 'grab' });
+            this.props.canvasRef.handler.interactionHandler.grab();
         },
     }
 
