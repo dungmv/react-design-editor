@@ -2277,6 +2277,11 @@ chalk@^3.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+changedpi@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/changedpi/-/changedpi-1.0.4.tgz#91b915c7e3fbbcd75559249f553902b96f3e4c7e"
+  integrity sha512-9r6MNQrbg+cFURvEy10wo9Q35PD5GVj2GvXCbUYv8mU0Uf/NbkR7KlzMrjT4Ycd8a2nxApFJXQX2lTOPRFyG2g==
+
 chardet@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"

@@ -1,6 +1,7 @@
 import { fabric } from 'fabric';
 import warning from 'warning';
 import { v4 } from 'uuid';
+import * as changedpi from 'changedpi';
 
 import {
     ImageHandler,
@@ -1366,8 +1367,8 @@ class Handler implements HandlerOptions {
      */
     public saveCanvasImage = (option = { name: 'Image', format: 'png', quality: 1, multiplier: 300 / 72 }) => {
         const viewport = {
-            width: this.workarea.width,
-            height: this.workarea.height,
+            width: this.workarea.width * this.workarea.scaleX,
+            height: this.workarea.height * this.workarea.scaleY,
             top: this.workarea.top,
             left: this.workarea.left,
         }
@@ -1381,7 +1382,7 @@ class Handler implements HandlerOptions {
         const dataUrl = this.canvas.toDataURL({...viewport, ...option});
         if (dataUrl) {
             const anchorEl = document.createElement('a');
-            anchorEl.href = dataUrl;
+            anchorEl.href = changedpi.changeDpiDataUrl(dataUrl, 300);
             anchorEl.download = `${option.name}.png`;
             document.body.appendChild(anchorEl); // required for firefox
             anchorEl.click();

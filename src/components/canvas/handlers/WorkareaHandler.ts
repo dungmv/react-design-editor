@@ -303,7 +303,8 @@ class WorkareaHandler {
                 src: null,
                 file: null,
             });
-            imageFromUrl(source as string);
+            // imageFromUrl(source as string);
+            imageFromUrl('./images/sample/blank.png');
             return;
         }
         if (source instanceof File) {
