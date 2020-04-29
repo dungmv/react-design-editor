@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 
 import Handler from './Handler';
-import { WorkareaObject, FabricObject } from '../utils';
+import { FabricObject } from '../utils';
 
 class GuidelineHandler {
     handler: Handler;
@@ -133,15 +133,10 @@ class GuidelineHandler {
             if (this.isInRange(objectLeft - (objectWidth / 2), activeObjectLeft - (activeObjectWidth / 2))) {
                 verticalInTheRange = true;
                 if (canvasObjects[i].id === 'workarea') {
-                    const workarea = canvasObjects[i] as WorkareaObject;
                     const y1 = -5000;
                     const y2 = 5000;
                     let x = objectLeft - (objectWidth / 2);
-                    this.verticalLines.push({
-                        x,
-                        y1,
-                        y2,
-                    });
+                    this.verticalLines.push({ x, y1, y2 });
                 } else {
                     this.verticalLines.push({
                         x: objectLeft - (objectWidth / 2),
