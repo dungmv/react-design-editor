@@ -50,7 +50,7 @@ export default {
                         <Form.Item label={i18n.t('imagemap.filter.blend-color')} colon={false}>
                         {
                             getFieldDecorator('filters.blend-color.color', {
-                                initialValue: filters[16] ? filters[16].color : 'rgba(1, 1, 1, 1)',
+                                initialValue: filters[16] ? filters[16].color : 'rgba(255, 255, 255, 1)',
                             })(
                                 <ColorPicker />,
                             )

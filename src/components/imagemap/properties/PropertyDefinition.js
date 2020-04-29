@@ -17,9 +17,9 @@ export default {
             title: 'Image',
             component: ImageProperty,
         },
-        style: {
-            title: 'Style',
-            component: StyleProperty,
+        filter: {
+            title: 'Filter',
+            component: ImageFilterProperty,
         },
     },
     group: {
