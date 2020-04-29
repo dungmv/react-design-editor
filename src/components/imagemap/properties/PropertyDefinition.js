@@ -17,6 +17,10 @@ export default {
             title: 'Image',
             component: ImageProperty,
         },
+        style: {
+            title: 'Style',
+            component: StyleProperty,
+        },
     },
     group: {
         general: {

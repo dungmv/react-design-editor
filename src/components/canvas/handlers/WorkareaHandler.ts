@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 
 import { Handler } from '.';
-import { WorkareaLayout, WorkareaObject, FabricElement } from '../utils';
+import { WorkareaObject, FabricElement } from '../utils';
 
 const defaultWorkareaOption: Partial<WorkareaObject> = {
     width: 600,
@@ -47,99 +47,6 @@ class WorkareaHandler {
         this.handler.objects = this.handler.getObjects();
         this.handler.canvas.centerObject(this.handler.workarea);
         this.handler.canvas.renderAll();
-    }
-
-    /**
-     * Set the layout on workarea
-     * @param {WorkareaLayout} layout
-     * @returns
-     */
-    public setLayout = (layout: WorkareaLayout) => {
-        this.handler.workarea.set('layout', layout);
-        const { _element, isElement, workareaWidth, workareaHeight } = this.handler.workarea;
-        const { canvas } = this.handler;
-        let scaleX = 1;
-        let scaleY = 1;
-        const isFixed = layout === 'fixed';
-        const isResponsive = layout === 'responsive';
-        const isFullscreen = layout === 'fullscreen';
-        if (isElement) {
-            if (isFixed) {
-                scaleX = workareaWidth / _element.width;
-                scaleY = workareaHeight / _element.height;
-            } else if (isResponsive) {
-                scaleX = canvas.getWidth() / _element.width;
-                scaleY = canvas.getHeight() / _element.height;
-                if (_element.height >= _element.width) {
-                    scaleX = scaleY;
-                } else {
-                    scaleY = scaleX;
-                }
-            } else {
-                scaleX = canvas.getWidth() / _element.width;
-                scaleY = canvas.getHeight() / _element.height;
-            }
-        }
-        this.handler.getObjects().forEach(obj => {
-            const { id } = obj as FabricElement;
-            if (id !== 'workarea') {
-                const objScaleX = !isFullscreen ? 1 : scaleX;
-                const objScaleY = !isFullscreen ? 1 : scaleY;
-                obj.set({
-                    scaleX: !isFullscreen ? 1 : objScaleX,
-                    scaleY: !isFullscreen ? 1 : objScaleY,
-                });
-            }
-        });
-        if (isResponsive) {
-            if (isElement) {
-                const center = canvas.getCenter();
-                this.handler.workarea.set({
-                    scaleX: 1,
-                    scaleY: 1,
-                });
-                this.handler.zoomHandler.zoomToPoint(new fabric.Point(center.left, center.top), scaleX);
-            } else {
-                this.handler.workarea.set({
-                    width: 0,
-                    height: 0,
-                    backgroundColor: 'rgba(255, 255, 255, 0)',
-                });
-            }
-            canvas.centerObject(this.handler.workarea);
-            canvas.renderAll();
-            return;
-        }
-        if (isElement) {
-            this.handler.workarea.set({
-                width: _element.width,
-                height: _element.height,
-                scaleX,
-                scaleY,
-            });
-        } else {
-            const width = isFixed ? this.handler.workarea.workareaWidth : this.handler.canvas.getWidth();
-            const height = isFixed ? this.handler.workarea.workareaHeight : this.handler.canvas.getHeight();
-            this.handler.workarea.set({
-                width,
-                height,
-                backgroundColor: 'rgba(255, 255, 255, 1)',
-            });
-            this.handler.canvas.renderAll();
-            if (isFixed) {
-                canvas.centerObject(this.handler.workarea);
-            } else {
-                this.handler.workarea.set({
-                    left: 0,
-                    top: 0,
-                });
-            }
-        }
-        canvas.centerObject(this.handler.workarea);
-        const center = canvas.getCenter();
-        canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
-        this.handler.zoomHandler.zoomToPoint(new fabric.Point(center.left, center.top), 1);
-        canvas.renderAll();
     }
 
     /**
@@ -237,18 +144,13 @@ class WorkareaHandler {
      */
     setImage = (source: string | File, loaded = false) => {
         const { canvas, workarea, editable } = this.handler;
-        if (workarea.layout === 'responsive') {
-            this.setResponsiveImage(source, loaded);
-            return;
-        }
+
         const imageFromUrl = (src: string) => {
             fabric.Image.fromURL(src, (img: any) => {
                 let width = canvas.getWidth();
                 let height = canvas.getHeight();
-                if (workarea.layout === 'fixed') {
-                    width = workarea.width * workarea.scaleX;
-                    height = workarea.height * workarea.scaleY;
-                }
+                width = workarea.width * workarea.scaleX;
+                height = workarea.height * workarea.scaleY;
                 let scaleX = 1;
                 let scaleY = 1;
                 if (img._element) {

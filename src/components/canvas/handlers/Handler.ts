@@ -544,10 +544,6 @@ class Handler implements HandlerOptions {
         } else {
             option.editable = editable;
         }
-        if (editable && this.workarea.layout === 'fullscreen') {
-            option.scaleX = this.workarea.scaleX;
-            option.scaleY = this.workarea.scaleY;
-        }
         const newOption = Object.assign({}, defaultOption, obj, {
             container: this.container.id,
             editable,
@@ -1146,22 +1142,11 @@ class Handler implements HandlerOptions {
                 if (obj.id === 'workarea') {
                     return;
                 }
-                const canvasWidth = this.canvas.getWidth();
-                const canvasHeight = this.canvas.getHeight();
-                const { width, height, scaleX, scaleY, layout, left, top } = this.workarea;
-                if (layout === 'fullscreen') {
-                    const leftRatio = canvasWidth / (width * scaleX);
-                    const topRatio = canvasHeight / (height * scaleY);
-                    obj.left *= leftRatio;
-                    obj.top *= topRatio;
-                    obj.scaleX *= leftRatio;
-                    obj.scaleY *= topRatio;
-                } else {
-                    const diffLeft = left - prevLeft;
-                    const diffTop = top - prevTop;
-                    obj.left += diffLeft;
-                    obj.top += diffTop;
-                }
+                const { left, top } = this.workarea;
+                const diffLeft = left - prevLeft;
+                const diffTop = top - prevTop;
+                obj.left += diffLeft;
+                obj.top += diffTop;
                 if (obj.clipPath) {
                     const self = this;
                     obj.clipPath.top += top - prevTop;

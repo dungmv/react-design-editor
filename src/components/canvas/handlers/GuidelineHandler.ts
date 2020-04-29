@@ -137,9 +137,6 @@ class GuidelineHandler {
                     const y1 = -5000;
                     const y2 = 5000;
                     let x = objectLeft - (objectWidth / 2);
-                    if (workarea.layout === 'fullscreen') {
-                        x = 0;
-                    }
                     this.verticalLines.push({
                         x,
                         y1,
@@ -163,13 +160,9 @@ class GuidelineHandler {
             if (this.isInRange(objectLeft + (objectWidth / 2), activeObjectLeft + (activeObjectWidth / 2))) {
                 verticalInTheRange = true;
                 if (canvasObjects[i].id === 'workarea') {
-                    const workarea = canvasObjects[i] as WorkareaObject;
                     const y1 = -5000;
                     const y2 = 5000;
                     let x = objectLeft + (objectWidth / 2);
-                    if (workarea.layout === 'fullscreen') {
-                        x = this.handler.canvas.getWidth();
-                    }
                     this.verticalLines.push({
                         x,
                         y1,
@@ -218,18 +211,10 @@ class GuidelineHandler {
             if (this.isInRange(objectTop - (objectHeight / 2), activeObjectTop - (activeObjectHeight / 2))) {
                 horizontalInTheRange = true;
                 if (canvasObjects[i].id === 'workarea') {
-                    const workarea = canvasObjects[i] as WorkareaObject;
                     const x1 = -5000;
                     const x2 = 5000;
                     let y = objectTop - (objectHeight / 2);
-                    if (workarea.layout === 'fullscreen') {
-                        y = 0;
-                    }
-                    this.horizontalLines.push({
-                        y,
-                        x1,
-                        x2,
-                    });
+                    this.horizontalLines.push({ y, x1, x2 });
                 } else {
                     this.horizontalLines.push({
                         y: objectTop - (objectHeight / 2),
@@ -248,18 +233,10 @@ class GuidelineHandler {
             if (this.isInRange(objectTop + (objectHeight / 2), activeObjectTop + (activeObjectHeight / 2))) {
                 horizontalInTheRange = true;
                 if (canvasObjects[i].id === 'workarea') {
-                    const workarea = canvasObjects[i] as WorkareaObject;
                     const x1 = -5000;
                     const x2 = 5000;
                     let y = objectTop + (objectHeight / 2);
-                    if (workarea.layout === 'fullscreen') {
-                        y = this.handler.canvas.getHeight();
-                    }
-                    this.horizontalLines.push({
-                        y,
-                        x1,
-                        x2,
-                    });
+                    this.horizontalLines.push({ y, x1, x2 });
                 } else {
                     this.horizontalLines.push({
                         y: objectTop + (objectHeight / 2),

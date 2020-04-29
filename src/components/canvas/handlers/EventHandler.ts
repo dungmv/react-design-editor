@@ -463,68 +463,25 @@ class EventHandler {
 		const diffHeight = nextHeight / 2 - this.handler.height / 2;
 		this.handler.width = nextWidth;
 		this.handler.height = nextHeight;
-		if (this.handler.workarea.layout === 'fixed') {
-			this.handler.canvas.centerObject(this.handler.workarea);
-			this.handler.workarea.setCoords();
-			if (this.handler.gridOption.enabled) {
-				return;
-			}
-			this.handler.canvas.getObjects().forEach((obj: any, index) => {
-				if (index !== 0) {
-					const left = obj.left + diffWidth;
-					const top = obj.top + diffHeight;
-					obj.set({
-						left,
-						top,
-					});
-					obj.setCoords();
-				}
-			});
-			this.handler.canvas.renderAll();
+
+		this.handler.canvas.centerObject(this.handler.workarea);
+		this.handler.workarea.setCoords();
+		if (this.handler.gridOption.enabled) {
 			return;
 		}
-		let scaleX = nextWidth / this.handler.workarea.width;
-		const scaleY = nextHeight / this.handler.workarea.height;
-		if (this.handler.workarea.layout === 'responsive') {
-			if (this.handler.workarea.height > this.handler.workarea.width) {
-				scaleX = scaleY;
-				if (nextWidth < this.handler.workarea.width * scaleX) {
-					scaleX = scaleX * (nextWidth / (this.handler.workarea.width * scaleX));
-				}
-			} else {
-				if (nextHeight < this.handler.workarea.height * scaleX) {
-					scaleX = scaleX * (nextHeight / (this.handler.workarea.height * scaleX));
-				}
-			}
-			const deltaPoint = new fabric.Point(diffWidth, diffHeight);
-			this.handler.canvas.relativePan(deltaPoint);
-			const center = this.handler.canvas.getCenter();
-			this.handler.zoomHandler.zoomToPoint(new fabric.Point(center.left, center.top), scaleX);
-			this.handler.canvas.renderAll();
-			return;
-		}
-		const diffScaleX = nextWidth / (this.handler.workarea.width * this.handler.workarea.scaleX);
-		const diffScaleY = nextHeight / (this.handler.workarea.height * this.handler.workarea.scaleY);
-		this.handler.workarea.set({
-			scaleX,
-			scaleY,
-		});
-		this.handler.canvas.getObjects().forEach((obj: any) => {
-			if (obj.id !== 'workarea') {
-				const left = obj.left * diffScaleX;
-				const top = obj.top * diffScaleY;
-				const newScaleX = obj.scaleX * diffScaleX;
-				const newScaleY = obj.scaleY * diffScaleY;
+		this.handler.canvas.getObjects().forEach((obj: any, index) => {
+			if (index !== 0) {
+				const left = obj.left + diffWidth;
+				const top = obj.top + diffHeight;
 				obj.set({
-					scaleX: newScaleX,
-					scaleY: newScaleY,
 					left,
 					top,
 				});
 				obj.setCoords();
-            }
+			}
 		});
 		this.handler.canvas.renderAll();
+		return;
 	};
 
 	/**

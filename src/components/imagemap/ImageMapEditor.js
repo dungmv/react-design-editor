@@ -149,10 +149,6 @@ class ImageMapEditor extends Component {
                 this.canvasHandlers.onChangeWokarea(changedKey, changedValue, allValues.workarea);
                 return;
             }
-            // if (changedKey === 'width' || changedKey === 'height') {
-            //     this.canvasRef.handler.scaleToResize(allValues.width, allValues.height);
-            //     return;
-            // }
             if (changedKey === 'locked') {
                 this.canvasRef.handler.setObject({
                     lockMovementX: changedValue,
@@ -255,10 +251,6 @@ class ImageMapEditor extends Component {
             this.canvasRef.handler.set(changedKey, changedValue);
         },
         onChangeWokarea: (changedKey, changedValue, allValues) => {
-            if (changedKey === 'layout') {
-                this.canvasRef.handler.workareaHandler.setLayout(changedValue);
-                return;
-            }
             if (changedKey === 'file' || changedKey === 'src') {
                 this.canvasRef.handler.workareaHandler.setImage(changedValue);
                 return;

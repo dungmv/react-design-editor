@@ -144,8 +144,6 @@ export interface FabricElement extends FabricObject<fabric.Rect> {
     setSource: (source: any) => void;
 }
 
-export type WorkareaLayout = 'fixed' | 'responsive' | 'fullscreen';
-
 export interface WorkareaOption {
     /**
      * Image URL
@@ -172,19 +170,9 @@ export interface WorkareaOption {
      * @type {string}
      */
     backgroundColor?: string;
-    /**
-     * Workarea Layout Type
-     * @type {WorkareaLayout}
-     */
-    layout?: WorkareaLayout;
 }
 
 export type WorkareaObject = FabricImage & {
-    /**
-     * Workarea Layout Type
-     * @type {WorkareaLayout}
-     */
-    layout?: WorkareaLayout;
     /**
      * Workarea Image Element
      * @type {HTMLImageElement}
