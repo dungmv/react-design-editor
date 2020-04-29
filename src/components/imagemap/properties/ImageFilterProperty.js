@@ -1,5 +1,6 @@
 import React from 'react';
-import { Row, Col, Form, Tag, Slider } from 'antd';
+import { Row, Col, Form, Tag, Slider, Select } from 'antd';
+import ColorPicker from '../../common/ColorPicker';
 import i18n from 'i18next';
 
 export default {
@@ -8,6 +9,55 @@ export default {
         const { filters } = data;
         return (
             <Row>
+                <Row>
+                    <Col md={24} lg={6}>
+                        <Form.Item label={i18n.t('imagemap.filter.blend')}>
+                            {
+                                getFieldDecorator('filters.blend-color.enabled', {
+                                    valuePropName: 'checked',
+                                    initialValue: !!filters[16],
+                                })(
+                                    <Tag.CheckableTag className="rde-action-tag">
+                                        {'B'}
+                                    </Tag.CheckableTag>,
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col md={24} lg={12}>
+                        <Form.Item label={i18n.t('imagemap.filter.blend-mode')} colon={false}>
+                            {
+                                getFieldDecorator('filters.blend-color.mode', {
+                                    initialValue: filters[16] ? filters[16].mode : 'multiply',
+                                })(
+                                    <Select style={{ width: '80%' }}>
+                                        <Select.Option key="multiply" value="multiply">multiply</Select.Option>
+                                        <Select.Option key="tint" value="tint">tint</Select.Option>
+                                        <Select.Option key="add" value="add">add</Select.Option>
+                                        <Select.Option key="diff" value="diff">diff</Select.Option>
+                                        <Select.Option key="subtract" value="subtract">subtract</Select.Option>
+                                        <Select.Option key="screen" value="screen">screen</Select.Option>
+                                        <Select.Option key="lighten" value="lighten">lighten</Select.Option>
+                                        <Select.Option key="darken" value="darken">darken</Select.Option>
+                                        <Select.Option key="overlay" value="overlay">overlay</Select.Option>
+                                        <Select.Option key="exclusion" value="exclusion">exclusion</Select.Option>
+                                    </Select>,
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col md={24} lg={6}>
+                        <Form.Item label={i18n.t('imagemap.filter.blend-color')} colon={false}>
+                        {
+                            getFieldDecorator('filters.blend-color.color', {
+                                initialValue: filters[16] ? filters[16].color : 'rgba(1, 1, 1, 1)',
+                            })(
+                                <ColorPicker />,
+                            )
+                        }
+                        </Form.Item>
+                    </Col>
+                </Row>
                 <Row>
                     <Col md={24} lg={6}>
                         <Form.Item label={i18n.t('imagemap.filter.grayscale')}>

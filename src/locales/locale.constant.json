@@ -69,7 +69,10 @@
             "hue": "Hue",
             "noise": "Noise",
             "pixelate": "Pixelate",
-            "blur": "Blur"
+            "blur": "Blur",
+            "blend": "Blend",
+            "blend-mode": "Mode",
+            "blend-color": "Color"
         },
         "element": {
             "mouse-hover-enabled": "Hover enabled"

@@ -211,6 +211,12 @@ class ImageMapEditor extends Component {
             if (changedKey === 'filters') {
                 const filterKey = Object.keys(changedValue)[0];
                 const filterValue = allValues.filters[filterKey];
+                if (filterKey === 'blend-color') {
+                    const color = filterValue.color;
+                    const mode = filterValue.mode;
+                    this.canvasRef.handler.imageHandler.applyFilterByType(filterKey, changedValue[filterKey].enabled, { color, mode });
+                    return;
+                }
                 if (filterKey === 'gamma') {
                     const rgb = [filterValue.r, filterValue.g, filterValue.b];
                     this.canvasRef.handler.imageHandler.applyFilterByType(filterKey, changedValue[filterKey].enabled, { gamma: rgb });
