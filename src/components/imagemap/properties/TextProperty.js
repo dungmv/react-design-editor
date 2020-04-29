@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Slider, Col, Select, Tag } from 'antd';
+import { Form, Input, Slider, Col, Select, Tag } from 'antd';
 import sortBy from 'lodash/sortBy';
 
 import Icon from '../../icon/Icon';
@@ -12,6 +12,15 @@ export default {
         const { getFieldDecorator } = form;
         return (
             <React.Fragment>
+                <Form.Item colon={false}>
+                    {
+                        getFieldDecorator('text', {
+                            initialValue: data.text,
+                        })(
+                            <Input />,
+                        )
+                    }
+                </Form.Item>
                 <Col span={16}>
                     <Form.Item label="Font Family" colon={false}>
                         {
