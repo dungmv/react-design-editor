@@ -946,8 +946,7 @@ class Handler implements HandlerOptions {
                 this.canvas.renderAll();
                 return;
             }
-            const { filters = [], ...option } = obj;
-            obj.setElement(source, option);
+            obj.setElement(source);
             obj.setCoords();
             this.canvas.renderAll();
         });
