@@ -8,7 +8,6 @@ export default {
         if (!data) {
             return null;
         }
-        const layout = data.layout || 'fixed';
         return (
             <React.Fragment>
                 <Form.Item label={i18n.t('common.name')} colon={false}>

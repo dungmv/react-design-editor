@@ -24,7 +24,6 @@ const propertiesToInclude = [
     'locked',
     'file',
     'src',
-    'layout',
     'workareaWidth',
     'workareaHeight',
     'videoLoadType',

@@ -22,7 +22,6 @@ const defaultWorkareaOption: Partial<WorkareaObject> = {
     name: '',
     id: 'workarea',
     type: 'image',
-    layout: 'fixed', // fixed, responsive, fullscreen
 };
 
 class WorkareaHandler {
@@ -180,16 +179,12 @@ class WorkareaHandler {
                 }
                 canvas.centerObject(workarea);
                 if (editable && !loaded) {
-                    const { layout } = workarea;
                     canvas.getObjects().forEach(obj => {
                         const { id } = obj as FabricElement;
                         if (id !== 'workarea') {
-                            scaleX = layout !== 'fullscreen' ? 1 : scaleX;
-                            scaleY = layout !== 'fullscreen' ? 1 : scaleY;
-                            obj.set({
-                                scaleX,
-                                scaleY,
-                            });
+                            scaleX = 1;
+                            scaleY = 1;
+                            obj.set({ scaleX, scaleY });
                             obj.setCoords();
                         }
                     });
