@@ -265,6 +265,17 @@ class ImageMapEditor extends Component {
                 this.canvasRef.canvas.centerObject(this.canvasRef.handler.workarea);
                 return;
             }
+            if (changedKey === 'filters') {
+                const filterKey = Object.keys(changedValue)[0];
+                const filterValue = allValues.filters[filterKey];
+                if (filterKey === 'blend-color') {
+                    const color = filterValue.color;
+                    const mode = filterValue.mode;
+                    this.canvasRef.handler.imageHandler.applyFilterByType(filterKey, changedValue[filterKey].enabled, { color, mode });
+                    return;
+                }
+                return;
+            }
             this.canvasRef.handler.workarea.set(changedKey, changedValue);
             this.canvasRef.canvas.requestRenderAll();
         },
