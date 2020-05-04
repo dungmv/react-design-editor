@@ -453,29 +453,19 @@ class Handler implements HandlerOptions {
     /**
      * Set the image
      * @param {FabricImage} obj
-     * @param {*} source
+     * @param {string} source
      * @returns
      */
-    public setImage = (obj: FabricImage, source: any) => {
+    public setImage = (obj: FabricImage, source: string) => {
         if (!source) {
             this.loadImage(obj, null);
             obj.set('file', null);
             obj.set('src', null);
             return;
         }
-        if (source instanceof File) {
-             const reader = new FileReader();
-             reader.onload = () => {
-                 this.loadImage(obj, reader.result as string);
-                 obj.set('file', source);
-                 obj.set('src', null);
-             };
-             reader.readAsDataURL(source);
-        } else {
-             this.loadImage(obj, source);
-             obj.set('file', null);
-             obj.set('src', source);
-        }
+        this.loadImage(obj, source);
+        obj.set('file', null);
+        obj.set('src', source);
     }
 
     /**
@@ -483,7 +473,7 @@ class Handler implements HandlerOptions {
      * @param {string} id
      * @param {*} source
      */
-    public setImageById = (id: string, source: any) => {
+    public setImageById = (id: string, source: string) => {
         const findObject = this.findById(id) as FabricImage;
         this.setImage(findObject, source);
     }
@@ -621,7 +611,6 @@ class Handler implements HandlerOptions {
         createdObj.set({
             filters: this.imageHandler.createFilters(filters),
         });
-        this.setImage(createdObj, obj.src || obj.file);
         return createdObj;
     }
 
@@ -1122,8 +1111,6 @@ class Handler implements HandlerOptions {
             this.workareaHandler.init();
         }
         if (!workareaExist.length) {
-            this.canvas.centerObject(this.workarea);
-            this.workarea.setCoords();
             prevLeft = this.workarea.left;
             prevTop = this.workarea.top;
         } else {
@@ -1131,10 +1118,10 @@ class Handler implements HandlerOptions {
             prevLeft = workarea.left;
             prevTop = workarea.top;
             this.workarea.set(workarea);
-            this.canvas.centerObject(this.workarea);
             this.workareaHandler.setImage(workarea.src, true);
-            this.workarea.setCoords();
         }
+        this.canvas.centerObject(this.workarea);
+        this.workarea.setCoords();
         
         setTimeout(() => {
             json.forEach((obj: FabricObjectOption) => {
@@ -1322,23 +1309,17 @@ class Handler implements HandlerOptions {
     /**
      * Save target object as image
      * @param {FabricObject} targetObject
-     * @param {string} [option={ name: 'New Image', format: 'png', quality: 1 }]
      */
-    public saveImage = (targetObject: FabricObject, option = { name: 'New Image', format: 'png', quality: 1 }) => {
-        let dataUrl;
+    public saveImage = (targetObject: FabricObject) => {
         let target = targetObject;
-        if (target) {
-            dataUrl = target.toDataURL(option);
-        } else {
+        if (!target) {
             target = this.canvas.getActiveObject() as FabricObject;
-            if (target) {
-                dataUrl = target.toDataURL(option);
-            }
         }
-        if (dataUrl) {
+        if (target && target.src) {
             const anchorEl = document.createElement('a');
-            anchorEl.href = dataUrl;
-            anchorEl.download = `${option.name}.png`;
+            anchorEl.href = target.src;
+            anchorEl.download = `image.png`;
+            anchorEl.target = '_blank';
             document.body.appendChild(anchorEl); // required for firefox
             anchorEl.click();
             anchorEl.remove();
@@ -1347,9 +1328,9 @@ class Handler implements HandlerOptions {
 
     /**
      * Save canvas as image
-     * @param {string} [option={ name: 'New Image', format: 'png', quality: 1, multiplier: 1 }]
+     * @param {string} [option={ name: 'Image', format: 'png', quality: 1, multiplier: 300 / 72 }]
      */
-    public saveCanvasImage = (option = { name: 'Image', format: 'png', quality: 1, multiplier: 300 / 72 }) => {
+    public saveCanvasImage = (option = { name: 'Image', format: 'png', quality: 1, multiplier: 1 }) => {
         const viewport = {
             width: this.workarea.width * this.workarea.scaleX,
             height: this.workarea.height * this.workarea.scaleY,

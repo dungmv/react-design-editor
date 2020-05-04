@@ -159,7 +159,7 @@ class ImageMapEditor extends Component {
                 });
                 return;
             }
-            if (changedKey === 'file' || changedKey === 'src' || changedKey === 'code') {
+            if (changedKey === 'src' || changedKey === 'code') {
                 if (selectedItem.type === 'image') {
                     this.canvasRef.handler.setImageById(selectedItem.id, changedValue);
                 }

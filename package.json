@@ -39,9 +39,9 @@
 	"homepage": "https://salgum1114.github.io/react-design-editor",
 	"peerDependencies": {
 		"@types/animejs": "^3.1.0",
-		"@types/fabric": "^3.0.1",
+		"@types/fabric": "^3.6.0",
 		"animejs": "^3.0.0",
-		"fabric": "^3.4.0",
+		"fabric": "^3.6.0",
 		"react": "^16.4.1",
 		"react-dom": "^16.4.1",
 		"react-dom-factories": "^1.0.2"
@@ -54,7 +54,7 @@
 		"classnames": "^2.2.6",
 		"color": "^3.1.2",
 		"echarts": "^4.7.0",
-		"fabric": "^3.5.1",
+		"fabric": "^3.6.0",
 		"gifler": "^0.1.0",
 		"i18next": "^19.0.0",
 		"i18next-browser-languagedetector": "^2.2.4",
