@@ -459,12 +459,10 @@ class Handler implements HandlerOptions {
     public setImage = (obj: FabricImage, source: string) => {
         if (!source) {
             this.loadImage(obj, null);
-            obj.set('file', null);
             obj.set('src', null);
             return;
         }
         this.loadImage(obj, source);
-        obj.set('file', null);
         obj.set('src', source);
     }
 
@@ -611,7 +609,7 @@ class Handler implements HandlerOptions {
         createdObj.set({
             filters: this.imageHandler.createFilters(filters),
         });
-        // this.setImage(createdObj, obj.src);
+        this.setImage(createdObj, obj.src);
         return createdObj;
     }
 
@@ -936,7 +934,8 @@ class Handler implements HandlerOptions {
                 this.canvas.renderAll();
                 return;
             }
-            obj.setElement(source);
+            const { filters = [], ...option } = obj;
+            obj.setElement(source, option);
             obj.setCoords();
             this.canvas.renderAll();
         });

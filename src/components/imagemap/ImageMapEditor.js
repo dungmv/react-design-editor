@@ -22,7 +22,6 @@ const propertiesToInclude = [
     'id',
     'name',
     'locked',
-    'file',
     'src',
     'workareaWidth',
     'workareaHeight',

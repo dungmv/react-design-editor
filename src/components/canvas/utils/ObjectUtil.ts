@@ -116,11 +116,6 @@ export type FabricImage = FabricObject & Omit<fabric.Image, 'filters'> & {
      */
     src?: string;
     /**
-     * Image File or Blob
-     * @type {File}
-     */
-    file?: File;
-    /**
      * Image Filter
      * @type {IFilter[]}
      */
@@ -150,11 +145,6 @@ export interface WorkareaOption {
      * @type {string}
      */
     src?: string;
-    /**
-     * Image File or Blbo
-     * @type {File}
-     */
-    file?: File;
     /**
      * Workarea Width
      * @type {number}
