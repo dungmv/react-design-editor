@@ -50,11 +50,11 @@ class WorkareaHandler {
 
     /**
      * Set the responsive image on Workarea
-     * @param {string | File} [source]
+     * @param {string} [source]
      * @param {boolean} [loaded]
      * @returns
      */
-    public setResponsiveImage = (source: string | File, loaded?: boolean) => {
+    public setResponsiveImage = (source: string, loaded?: boolean) => {
         const { canvas, workarea, editable } = this.handler;
         const imageFromUrl = (src: string) => {
             fabric.Image.fromURL(src, (img: any) => {
@@ -113,35 +113,23 @@ class WorkareaHandler {
         if (!source) {
             workarea.set({
                 src: null,
-                file: null,
             });
             imageFromUrl(source as string);
             return;
         }
-        if (source instanceof File) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                workarea.set({
-                    file: source,
-                });
-                imageFromUrl(reader.result as string);
-            };
-            reader.readAsDataURL(source);
-        } else {
-            workarea.set({
-                src: source,
-            });
-            imageFromUrl(source);
-        }
+        workarea.set({
+            src: source,
+        });
+        imageFromUrl(source);
     }
 
     /**
      * Set the image on Workarea
-     * @param {string | File} source
+     * @param {string} source
      * @param {boolean} [loaded=false]
      * @returns
      */
-    setImage = (source: string | File, loaded = false) => {
+    setImage = (source: string, loaded = false) => {
         const { canvas, workarea, editable } = this.handler;
 
         const imageFromUrl = (src: string) => {
@@ -198,27 +186,15 @@ class WorkareaHandler {
         if (!source) {
             workarea.set({
                 src: null,
-                file: null,
             });
             // imageFromUrl(source as string);
             imageFromUrl('./images/sample/blank.png');
             return;
         }
-        if (source instanceof File) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                workarea.set({
-                    file: source,
-                });
-                imageFromUrl(reader.result as string);
-            };
-            reader.readAsDataURL(source);
-        } else {
-            workarea.set({
-                src: source,
-            });
-            imageFromUrl(source);
-        }
+        workarea.set({
+            src: source,
+        });
+        imageFromUrl(source);
     }
 }
 

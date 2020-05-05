@@ -611,6 +611,7 @@ class Handler implements HandlerOptions {
         createdObj.set({
             filters: this.imageHandler.createFilters(filters),
         });
+        // this.setImage(createdObj, obj.src);
         return createdObj;
     }
 
