@@ -1330,7 +1330,7 @@ class Handler implements HandlerOptions {
      * Save canvas as image
      * @param {string} [option={ name: 'Image', format: 'png', quality: 1, multiplier: 300 / 72 }]
      */
-    public saveCanvasImage = (option = { name: 'Image', format: 'png', quality: 1, multiplier: 1 }) => {
+    public saveCanvasImage = (option = { name: 'Image', format: 'png', quality: 1, multiplier: 300 / 72 }) => {
         const viewport = {
             width: this.workarea.width * this.workarea.scaleX,
             height: this.workarea.height * this.workarea.scaleY,
@@ -1344,7 +1344,7 @@ class Handler implements HandlerOptions {
         });
         this.canvas.renderAll();
 
-        const dataUrl = this.canvas.toDataURL({...viewport, ...option});
+        const dataUrl = this.canvas.toDataURL({...viewport, ...option, withoutTransform: true});
         if (dataUrl) {
             const anchorEl = document.createElement('a');
             anchorEl.href = changedpi.changeDpiDataUrl(dataUrl, 300);

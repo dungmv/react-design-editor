@@ -41,19 +41,19 @@ class ZoomHandler {
      * Zoom to fit
      */
     public zoomToFit = () => {
-        let scaleX;
-        let scaleY;
-        scaleX = this.handler.canvas.getWidth() / this.handler.workarea.width;
-        scaleY = this.handler.canvas.getHeight() / this.handler.workarea.height;
-        if (this.handler.workarea.height > this.handler.workarea.width) {
+        let width = this.handler.workarea.width * this.handler.workarea.scaleX;
+        let height = this.handler.workarea.height * this.handler.workarea.scaleY;
+        let scaleX = this.handler.canvas.getWidth() / width;
+        let scaleY = this.handler.canvas.getHeight() / height;
+        if (height > width) {
             scaleX = scaleY;
-            if (this.handler.canvas.getWidth() < this.handler.workarea.width * scaleX) {
-                scaleX = scaleX * (this.handler.canvas.getWidth() / (this.handler.workarea.width * scaleX));
+            if (this.handler.canvas.getWidth() < width * scaleX) {
+                scaleX = scaleX * (this.handler.canvas.getWidth() / (width * scaleX));
             }
         } else {
             scaleY = scaleX;
-            if (this.handler.canvas.getHeight() < this.handler.workarea.height * scaleX) {
-                scaleX = scaleX * (this.handler.canvas.getHeight() / (this.handler.workarea.height * scaleX));
+            if (this.handler.canvas.getHeight() < height * scaleX) {
+                scaleX = scaleX * (this.handler.canvas.getHeight() / (height * scaleX));
             }
         }
         const center = this.handler.canvas.getCenter();
