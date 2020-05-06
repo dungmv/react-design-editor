@@ -1122,7 +1122,7 @@ class Handler implements HandlerOptions {
         }
         this.canvas.centerObject(this.workarea);
         this.workarea.setCoords();
-        
+
         setTimeout(() => {
             json.forEach((obj: FabricObjectOption) => {
                 if (obj.id === 'workarea') {
@@ -1331,19 +1331,20 @@ class Handler implements HandlerOptions {
      * @param {string} [option={ name: 'Image', format: 'png', quality: 1, multiplier: 300 / 72 }]
      */
     public saveCanvasImage = (option = { name: 'Image', format: 'png', quality: 1, multiplier: 300 / 72 }) => {
+        this.canvas.getObjects().forEach((el: FabricObject) => {
+            if(el.id == 'workarea') {
+                el.visible = false;
+            }
+        });
+        this.zoomHandler.zoomOneToOne();
+        this.canvas.renderAll();
+
         const viewport = {
             width: this.workarea.width * this.workarea.scaleX,
             height: this.workarea.height * this.workarea.scaleY,
             top: this.workarea.top,
             left: this.workarea.left,
         }
-        this.canvas.getObjects().forEach((el: FabricObject) => {
-            if(el.id == 'workarea') {
-                el.visible = false;
-            }
-        });
-        this.canvas.renderAll();
-
         const dataUrl = this.canvas.toDataURL({...viewport, ...option, withoutTransform: true});
         if (dataUrl) {
             const anchorEl = document.createElement('a');
