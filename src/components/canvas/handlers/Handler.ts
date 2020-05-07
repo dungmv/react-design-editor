@@ -1124,13 +1124,14 @@ class Handler implements HandlerOptions {
         this.workarea.setCoords();
 
         setTimeout(() => {
-            json.forEach((obj: FabricObjectOption) => {
-                if (obj.id === 'workarea') {
+            json.forEach((origin: FabricObjectOption) => {
+                if (origin.id === 'workarea') {
                     return;
                 }
                 const { left, top } = this.workarea;
                 const diffLeft = left - prevLeft;
                 const diffTop = top - prevTop;
+                const obj:FabricObjectOption = {...origin}
                 obj.left += diffLeft;
                 obj.top += diffTop;
                 if (obj.clipPath) {
