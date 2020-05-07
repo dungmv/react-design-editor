@@ -162,7 +162,7 @@ class ImageMapHeaderToolbar extends Component {
                     />
                 </FlexItem>
                 <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-operation">
-                    <Select defaultValue={selectedPage} onChange={onChangePage} style={{ width: '64px' }}>
+                    <Select defaultValue={selectedPage + 1} onChange={onChangePage} style={{ width: '64px' }}>
                         {
                             pages.map((v, k) => <Select.Option key={k} value={`${k + 1}`}>{k + 1}</Select.Option>)
                         }
